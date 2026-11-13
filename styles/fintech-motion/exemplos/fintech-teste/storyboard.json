@@ -1,0 +1,297 @@
+{
+ "cena": "fintech",
+ "dy": 0,
+ "legenda": {
+  "texto": "#ffffff",
+  "destaque": "#3ddc84"
+ },
+ "substituicoes": [
+  {
+   "de": "dia cinco",
+   "para": "dia 5"
+  },
+  {
+   "de": "dia oito",
+   "para": "dia 8"
+  },
+  {
+   "de": "quarenta e cinco",
+   "para": "45"
+  }
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1,
+    2
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "SALÁRIO",
+     "x": 540,
+     "y": 520,
+     "entrada": "baixo",
+     "frase": 1
+    },
+    {
+     "tipo": "mini",
+     "texto": "SALDO DA CONTA",
+     "x": 540,
+     "y": 680,
+     "entrada": "abre",
+     "frase": 1,
+     "atraso": 0.4
+    },
+    {
+     "tipo": "saldo",
+     "de": 3200,
+     "ate": 640,
+     "x": 540,
+     "y": 850,
+     "entrada": "pop",
+     "frase": 1,
+     "atraso": 0.5,
+     "contar_frase": 2,
+     "contar_atraso": 0.3,
+     "dur": 1.8
+    },
+    {
+     "tipo": "moedas",
+     "n": 10,
+     "some": true,
+     "some_frase": 2,
+     "some_atraso": 0.3,
+     "passo": 0.16,
+     "x": 540,
+     "y": 1080,
+     "entrada": "pop",
+     "frase": 1,
+     "atraso": 0.9
+    },
+    {
+     "tipo": "callout",
+     "texto": "dia 5: caiu",
+     "x": 300,
+     "y": 1250,
+     "alvo": [
+      198,
+      1080
+     ],
+     "frase": 1,
+     "atraso": 1.6
+    },
+    {
+     "tipo": "callout",
+     "texto": "dia 9: sumiu",
+     "x": 800,
+     "y": 1250,
+     "alvo": [
+      882,
+      1080
+     ],
+     "frase": 2,
+     "atraso": 1.4
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    3,
+    4
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "calendario",
+     "dia": "8",
+     "mes": "NOV",
+     "x": 540,
+     "y": 470,
+     "entrada": "baixo",
+     "frase": 3
+    },
+    {
+     "tipo": "planilha",
+     "arquivo": "gastos_novembro.xlsx",
+     "x": 540,
+     "y": 980,
+     "entrada": "baixo",
+     "frase": 3,
+     "atraso": 0.5,
+     "linhas": [
+      [
+       "01/11",
+       "Mercado",
+       "87,40"
+      ],
+      [
+       "01/11",
+       "Gasolina",
+       "120,00"
+      ],
+      [
+       "01/11",
+       "Farmácia",
+       "34,90"
+      ],
+      [
+       "01/11",
+       "Padaria",
+       "12,58"
+      ],
+      [
+       "01/11",
+       "Uber",
+       "18,70"
+      ],
+      [
+       "01/11",
+       "Internet",
+       "89,90"
+      ]
+     ]
+    },
+    {
+     "tipo": "carimbo",
+     "texto": "PLANILHA ESQUECIDA",
+     "x": 540,
+     "y": 1310,
+     "rot": -3,
+     "entrada": "bate",
+     "frase": 4,
+     "atraso": 0.4
+    },
+    {
+     "tipo": "callout",
+     "texto": "dia 8: ninguém abre",
+     "x": 640,
+     "y": 1440,
+     "alvo": [
+      560,
+      1330
+     ],
+     "frase": 4,
+     "atraso": 1.2
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    5,
+    6
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "frase",
+     "texto": "O PROBLEMA NUNCA FOI",
+     "x": 540,
+     "y": 760,
+     "entrada": "abre",
+     "frase": 5
+    },
+    {
+     "tipo": "frase",
+     "texto": "ANOTAR.",
+     "g": true,
+     "x": 540,
+     "y": 930,
+     "entrada": "bate",
+     "frase": 6,
+     "atraso": 0.05
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    7,
+    8,
+    9
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "celular",
+     "marca": "GastoZap",
+     "x": 540,
+     "y": 900,
+     "entrada": "baixo",
+     "frase": 7,
+     "msgs": [
+      {
+       "de": "bot",
+       "texto": "Oi! Sou seu <b>agente financeiro</b>. Me manda seus gastos por texto ou áudio.",
+       "frase": 7,
+       "atraso": 0.5
+      },
+      {
+       "de": "eu",
+       "audio": "0:04",
+       "frase": 8,
+       "atraso": 0.05
+      },
+      {
+       "de": "bot",
+       "texto": "Anotado: <b>Mercado</b> · R$ 45,00 {ok}",
+       "frase": 9,
+       "atraso": 0.2
+      }
+     ]
+    },
+    {
+     "tipo": "callout",
+     "texto": "gastei 45 no mercado",
+     "x": 540,
+     "y": 350,
+     "alvo": [
+      690,
+      760
+     ],
+     "frase": 8,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "frases": [
+    10,
+    11
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "mini",
+     "texto": "EM BREVE",
+     "x": 540,
+     "y": 700,
+     "entrada": "abre",
+     "frase": 10
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "CONTROLE SEM PLANILHA",
+     "x": 540,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 10,
+     "atraso": 0.4
+    },
+    {
+     "tipo": "mini",
+     "texto": "MARCA FICTÍCIA · TESTE INTERNO",
+     "x": 540,
+     "y": 1060,
+     "entrada": "fade",
+     "frase": 11
+    }
+   ]
+  }
+ ]
+}

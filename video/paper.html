@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      :root { --tinta: #1b1f2a; --vermelho: #c0261f; --amarelo: #ffd23f; --verde: #2f7d32; --papel: #f4efe3; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #c9a877; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Georgia, "Times New Roman", serif; color: var(--tinta); }
+      #mesa { position: absolute; inset: 0; background-color: #c9a877; background-image: var(--tex-kraft); background-size: 512px 512px; }
+      .plano.clip { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: block; }
+      .el { position: absolute; }
+      .peca { position: relative; background-color: var(--papel); background-image: var(--tex-papel); background-size: 512px 512px;
+              box-shadow: 0 6px 0 rgba(60, 40, 20, 0.16), 0 20px 30px rgba(50, 30, 10, 0.32); }
+      .rasgado { clip-path: polygon(0% 2%, 6% 0%, 14% 1.5%, 24% 0%, 35% 1.2%, 48% 0%, 60% 1.6%, 72% 0%, 84% 1.4%, 94% 0%, 100% 2%, 99% 14%, 100% 28%, 99% 44%, 100% 60%, 99% 76%, 100% 90%, 98% 100%, 90% 98.6%, 78% 100%, 66% 98.4%, 52% 100%, 40% 98.6%, 28% 100%, 16% 98.4%, 6% 100%, 0% 98%, 1% 84%, 0% 68%, 1% 52%, 0% 36%, 1% 20%); }
+      .fita { position: absolute; width: 210px; height: 64px; background: rgba(238, 217, 140, 0.86); box-shadow: 0 4px 10px rgba(0,0,0,0.25); z-index: 2;
+              clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 0, 100% 0, 96% 20%, 100% 40%, 96% 60%, 100% 80%, 96% 100%, 12% 100%, 8% 90%, 4% 100%, 0 92%, 3% 50%); }
+      .carimbo { border: 12px solid var(--vermelho); color: var(--vermelho); font-family: Impact, "Arial Black", sans-serif; white-space: nowrap;
+                 text-transform: uppercase; text-align: center; padding: 8px 34px; line-height: 1; mix-blend-mode: multiply; opacity: 0.92; filter: url(#tinta); }
+      .titulo { font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.98; }
+      .marca-wrap { position: relative; display: inline-block; z-index: 0; }
+      .marca-fundo { position: absolute; left: -10px; right: -10px; top: 18%; bottom: 6%; background: var(--amarelo); z-index: -1; transform-origin: left center; transform: skewX(-4deg); }
+      .linha { margin-bottom: 56px; }
+      .linha .rot { font-size: 50px; margin-bottom: 8px; }
+      .linha .lin { display: flex; align-items: center; gap: 22px; }
+      .linha .bar { height: 76px; width: 0; border: 5px solid var(--tinta); }
+      .linha .val { font-size: 78px; text-transform: none; }
+      .num { text-transform: none; }
+      /* legenda: tarja de papel */
+      .clip { position: absolute; left: 60px; right: 60px; bottom: 250px; display: flex; align-items: center; justify-content: center; z-index: 50; }
+      .fala { font-family: Impact, "Arial Black", sans-serif; font-size: 92px; line-height: 1.05; color: var(--tinta); text-align: center; text-transform: uppercase;
+              background-color: #f6f0e2; background-image: var(--tex-papel); padding: 12px 44px 8px; border: 6px solid var(--tinta); transform: rotate(-1.2deg);
+              box-shadow: 0 8px 0 var(--tinta); }
+      .fala span { display: inline-block; margin: 0 0.08em; }
+      svg { overflow: visible; display: block; }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute">
+      <filter id="tinta" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="r" /><feDisplacementMap in="SourceGraphic" in2="r" scale="5" /></filter>
+    </svg>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="1080" data-height="1920">
+      <audio id="narracao" src="narration.wav" data-start="0" data-duration="__DURACAO__" data-track-index="2"></audio>
+      <div id="mesa" data-start="0" data-duration="__DURACAO__" data-track-index="0"></div>
+__PLANOS__
+__GRUPOS__
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      const S = DADOS.shots, FR = DADOS.frases;
+
+      // texturas de papel geradas por código (determinísticas)
+      function textura(base, variacao, semente, fibras) {
+        const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+        g.fillStyle = base; g.fillRect(0, 0, 512, 512);
+        let s = semente; const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+        const img = g.getImageData(0, 0, 512, 512); const d = img.data;
+        for (let i = 0; i < d.length; i += 4) { const v = (r() - 0.5) * variacao; d[i] += v; d[i + 1] += v; d[i + 2] += v; }
+        g.putImageData(img, 0, 0);
+        g.strokeStyle = 'rgba(90,60,30,0.10)'; g.lineWidth = 1;
+        for (let i = 0; i < fibras; i++) { const x = r() * 512, y = r() * 512, a = r() * Math.PI; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * 22, y + Math.sin(a) * 22); g.stroke(); }
+        return 'url(' + c.toDataURL('image/png') + ')';
+      }
+      document.documentElement.style.setProperty('--tex-kraft', textura('#c9a877', 34, 11, 700));
+      document.documentElement.style.setProperty('--tex-papel', textura('#f4efe3', 14, 29, 260));
+
+      // cada elemento é posicionado pelo centro (x, y) e girado por data-rot
+      document.querySelectorAll('.el').forEach((e) => gsap.set(e, { xPercent: -50, yPercent: -50, rotation: parseFloat(e.dataset.rot || '0') }));
+
+      const tl = gsap.timeline({ paused: true });
+      const fmt = (v, dec) => v.toFixed(dec).replace('.', ',');
+      function ent(sel, tipo, t) {
+        if (tipo === 'cima') tl.from(sel, { y: -1100, opacity: 0, duration: 0.55, ease: 'back.out(1.6)' }, t);
+        else if (tipo === 'baixo') tl.from(sel, { y: 1300, opacity: 0, duration: 0.55, ease: 'back.out(1.6)' }, t);
+        else if (tipo === 'esquerda') tl.from(sel, { x: -1200, duration: 0.55, ease: 'back.out(1.4)' }, t);
+        else if (tipo === 'direita') tl.from(sel, { x: 1200, duration: 0.55, ease: 'back.out(1.4)' }, t);
+        else if (tipo === 'bate') tl.fromTo(sel, { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 0.92, duration: 0.28, ease: 'back.out(2.2)' }, t);
+        else if (tipo === 'cai') tl.from(sel, { y: -1100, rotation: '-=16', opacity: 0, duration: 0.7, ease: 'bounce.out' }, t);
+        else if (tipo === 'cresce') tl.from(sel, { scale: 0, duration: 0.6, ease: 'back.out(1.4)' }, t);
+        else tl.from(sel, { scale: 0.3, opacity: 0, duration: 0.35, ease: 'back.out(2)' }, t);
+      }
+      function marca(sel, t) { tl.from(sel + ' .marca-fundo', { scaleX: 0, duration: 0.4, ease: 'power2.out' }, t); }
+      function efeito(sel, tipo, t) {
+        if (tipo === 'tremor') tl.to(sel, { x: '+=10', yoyo: true, repeat: 5, duration: 0.05 }, t);
+        else if (tipo === 'balanca') tl.to(sel, { rotation: '+=16', yoyo: true, repeat: 5, duration: 0.45, ease: 'sine.inOut' }, t);
+        else if (tipo === 'pulsa') tl.to(sel, { scale: 1.08, yoyo: true, repeat: 1, duration: 0.2 }, t);
+      }
+      function contador(sel, valor, dec, pre, suf, t, dur) {
+        const el = document.querySelector(sel); const o = { v: 0 };
+        el.textContent = pre + fmt(0, dec) + suf;
+        tl.to(o, { v: valor, duration: dur || 1.0, ease: 'power3.out', onUpdate: () => { el.textContent = pre + fmt(o.v, dec) + suf; } }, t);
+      }
+      function barra(sel, largura, t) { tl.to(sel + ' .bar', { width: largura, duration: 0.9, ease: 'power3.out' }, t); }
+      function textoEm(sel, t) { tl.from(sel + ' .val', { opacity: 0, duration: 0.2 }, t); }
+
+__ANIM_PLANOS__
+__ANIMACOES__
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

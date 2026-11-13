@@ -1,0 +1,11 @@
+{
+  "destaques": [
+    {"frase": "tres mitos", "cor": "", "efeito": "pulso"},
+    {"frase": "nao precisa", "cor": "#ff5a52", "efeito": "tremor"},
+    {"frase": "noite toda", "cor": "", "efeito": ""},
+    {"frase": "calor", "cor": "#ff5a52", "efeito": "tremor"},
+    {"frase": "vilao", "cor": "#ff5a52", "efeito": ""},
+    {"frase": "salva", "cor": "", "efeito": "pulso"}
+  ],
+  "cta": "salva"
+}

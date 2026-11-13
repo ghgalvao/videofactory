@@ -1,0 +1,3 @@
+Faça um vídeo no estilo blueprint (planta técnica) sobre como funciona o ar-condicionado split, para quem tem ar em casa, com 40 a 45 segundos, 9:16.
+Leia styles/blueprint/STYLE.md. Roteiro: ele não cria frio, tira o calor; evaporadora dentro e condensadora fora; fluido em tubos de cobre; absorve calor na sala, compressor aperta e esquenta lá fora, expande e gela de novo. Diagramas em linha clara sobre azul, setas de fluxo e etiquetas técnicas.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

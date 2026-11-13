@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/three-premium.min.js"></script>
+    <style>
+      @font-face { font-family: "Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.ttf"); font-weight: 500; }
+      :root { --bg: #06080b; --card: #0e131a; --borda: rgba(255,255,255,0.09); --txt: #e8edf2; --mudo: #8592a3; --verde: #3ddc84; --verm: #ff5a5a; --ouro: #f7b733; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: var(--txt); font-family: "Segoe UI", Arial, sans-serif; }
+      #fundo { position: absolute; inset: 0; background:
+        radial-gradient(900px 700px at 20% 30%, rgba(61,220,132,0.10), transparent 60%),
+        radial-gradient(900px 800px at 85% 75%, rgba(247,183,51,0.08), transparent 60%),
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 54px 54px,
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 54px 54px, var(--bg); }
+      #vinheta { position: absolute; inset: 0; box-shadow: inset 0 0 260px rgba(0,0,0,0.85); }
+      #moeda3d { position: absolute; inset: 0; width: 1080px; height: 1920px; z-index: 30; pointer-events: none; }
+      .pc { position: absolute; opacity: 0; }
+      .num { font-variant-numeric: tabular-nums; }
+      .mono { font-family: "Plex Mono", Consolas, monospace; }
+      /* topo */
+      #topo { left: 60px; right: 60px; top: 70px; display: flex; justify-content: space-between; font-family: "Plex Mono", monospace; font-size: 28px; letter-spacing: 3px; color: var(--mudo); opacity: 1; }
+      #topo b { color: var(--verde); font-weight: 500; }
+      #barra { position: absolute; left: 60px; top: 122px; height: 4px; width: 960px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+      #barra i { display: block; height: 100%; width: 100%; background: var(--verde); transform-origin: left center; transform: scaleX(0); }
+      /* gancho */
+      #grafico { left: 0; top: 330px; width: 1080px; height: 860px; }
+      .seta { padding: 18px 34px; border-radius: 60px; font-family: "Segoe UI Black"; font-size: 52px; letter-spacing: 2px; }
+      #sobe { left: 70px; top: 1150px; background: rgba(61,220,132,0.14); color: var(--verde); border: 3px solid var(--verde); }
+      #cai { right: 70px; top: 1150px; background: rgba(255,90,90,0.12); color: var(--verm); border: 3px solid var(--verm); }
+      #nao { left: 540px; top: 1190px; transform: translate(-50%, -50%) rotate(-6deg); font-family: "Segoe UI Black"; font-size: 64px; color: #fff; background: var(--verm); padding: 6px 30px; border-radius: 12px; }
+      #gchips { left: 0; right: 0; top: 1010px; display: flex; justify-content: center; align-items: center; gap: 22px; }
+      #gchips .chip { padding: 16px 28px; border-radius: 22px; background: #0e131a; border: 4px solid; font-family: "Segoe UI Black"; font-size: 58px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+      #gchips i { font-style: normal; font-family: "Segoe UI Black"; font-size: 90px; color: #fff; }
+      #titulo { left: 0; right: 0; top: 860px; text-align: center; }
+      #titulo h1 { font-family: "Segoe UI Black"; font-size: 132px; letter-spacing: 2px; line-height: 1; }
+      #titulo h1 span { display: inline-block; }
+      #titulo p { font-size: 44px; color: var(--mudo); margin-top: 26px; }
+      #titulo p b { color: var(--verde); }
+      /* cartões de corretora */
+      .card { width: 450px; top: 540px; padding: 30px 32px 28px; background: var(--card); border: 2px solid var(--borda); border-radius: 34px;
+              box-shadow: 0 30px 80px rgba(0,0,0,0.55); }
+      #cA { left: 50px; } #cB { left: 580px; }
+      .card .h { display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 700; }
+      .card .h i { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+      .card .par { font-family: "Plex Mono"; font-size: 24px; color: var(--mudo); margin-top: 18px; letter-spacing: 2px; }
+      .card .preco { font-family: "Segoe UI Black"; font-size: 62px; margin-top: 4px; letter-spacing: -1px; }
+      .card svg { display: block; margin-top: 12px; }
+      .card .tag { display: inline-block; margin-top: 14px; padding: 8px 18px; border-radius: 30px; font-size: 24px; font-weight: 800; letter-spacing: 2px; }
+      .card .btn { margin-top: 20px; height: 78px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-family: "Segoe UI Black"; font-size: 34px; letter-spacing: 3px; }
+      .card .saldo { position: absolute; left: 0; right: 0; top: calc(100% + 18px); padding: 16px 18px; border-radius: 18px; background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.18); font-size: 28px; opacity: 0; }
+      .card .saldo b { display: block; font-family: "Segoe UI Black"; font-size: 40px; color: var(--ouro); margin-top: 4px; }
+      #dif { left: 540px; top: 495px; transform: translate(-50%, -50%); padding: 12px 30px; border-radius: 40px; background: #121a24; border: 2px solid var(--ouro);
+             font-family: "Plex Mono"; font-size: 30px; color: var(--ouro); white-space: nowrap; z-index: 5; }
+      #ilustra { left: 0; right: 0; top: 1440px; text-align: center; font-family: "Plex Mono"; font-size: 24px; color: var(--mudo); letter-spacing: 4px; }
+      /* lucro e custos */
+      #lucro { left: 0; right: 0; top: 1050px; text-align: center; }
+      #lucro small { display: block; font-family: "Plex Mono"; font-size: 30px; letter-spacing: 6px; color: var(--mudo); }
+      #lucro b { display: block; font-family: "Segoe UI Black"; font-size: 132px; line-height: 1.05; color: var(--verde); text-shadow: 0 0 60px rgba(61,220,132,0.35); }
+      #custos { left: 150px; right: 150px; top: 1250px; }
+      .custo { display: flex; justify-content: space-between; padding: 10px 24px; margin-bottom: 10px; border-radius: 16px; background: rgba(255,90,90,0.09);
+               border: 2px solid rgba(255,90,90,0.35); font-size: 30px; font-weight: 700; opacity: 0; }
+      .custo span:last-child { color: var(--verm); font-family: "Plex Mono"; }
+      #rota { left: 0; top: 0; width: 1080px; height: 1920px; }
+      #relogio { left: 540px; top: 400px; transform: translate(-50%, -50%); padding: 14px 32px; border-radius: 40px; background: #121a24; border: 2px solid rgba(255,255,255,0.2);
+                 font-family: "Plex Mono"; font-size: 36px; white-space: nowrap; }
+      #juntos { left: 540px; top: 1230px; transform: translate(-50%, -50%); padding: 22px 40px; border-radius: 26px; background: rgba(247,183,51,0.12); border: 3px solid var(--ouro);
+                font-family: "Segoe UI Black"; font-size: 46px; color: var(--ouro); white-space: nowrap; text-align: center; line-height: 1.15; }
+      /* livro de ofertas */
+      #livro { left: 60px; right: 60px; top: 230px; padding: 30px 34px; background: var(--card); border: 2px solid var(--borda); border-radius: 34px; box-shadow: 0 30px 80px rgba(0,0,0,0.55); }
+      #livro .h { display: flex; justify-content: space-between; font-size: 30px; font-weight: 700; }
+      #livro .h span { font-family: "Plex Mono"; font-size: 24px; color: var(--mudo); font-weight: 500; }
+      .lin { position: relative; display: flex; justify-content: space-between; height: 76px; align-items: center; padding: 0 20px; margin-top: 10px; font-family: "Plex Mono"; font-size: 34px; }
+      .lin .bar { position: absolute; right: 0; top: 6px; bottom: 6px; background: rgba(255,90,90,0.18); border-radius: 10px; transform-origin: right center; }
+      .lin span { position: relative; } .lin span:first-child { color: var(--verm); }
+      #ordem { left: 540px; top: 1060px; transform: translate(-50%, -50%); padding: 16px 36px; border-radius: 40px; background: var(--verde); color: #04140b; font-family: "Segoe UI Black"; font-size: 40px; white-space: nowrap; }
+      #medias { left: 60px; right: 60px; top: 1130px; display: flex; gap: 24px; }
+      #medias div { flex: 1; padding: 22px 24px; border-radius: 26px; background: var(--card); border: 2px solid var(--borda); text-align: center; }
+      #medias small { display: block; font-family: "Plex Mono"; font-size: 24px; letter-spacing: 2px; color: var(--mudo); }
+      #medias b { display: block; font-family: "Segoe UI Black"; font-size: 54px; margin-top: 6px; }
+      /* robôs */
+      #robos { left: 90px; right: 90px; top: 330px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px 20px; }
+      .robo { width: 150px; height: 150px; margin: 0 auto; opacity: 0; }
+      #spread { left: 540px; top: 1000px; transform: translate(-50%, -50%); padding: 18px 40px; border-radius: 40px; background: rgba(247,183,51,0.14); border: 3px solid var(--ouro);
+                font-family: "Plex Mono"; font-size: 40px; color: var(--ouro); white-space: nowrap; }
+      #cron { left: 0; right: 0; top: 1100px; text-align: center; font-family: "Segoe UI Black"; font-size: 140px; color: #fff; }
+      #cron small { display: block; font-family: "Plex Mono"; font-size: 28px; letter-spacing: 5px; color: var(--mudo); }
+      #fechou { left: 540px; top: 1000px; transform: translate(-50%, -50%) rotate(-5deg); padding: 10px 34px; border: 10px solid var(--verm); color: var(--verm); background: rgba(6,8,11,0.92);
+                font-family: "Segoe UI Black"; font-size: 64px; white-space: nowrap; }
+      /* próximo e CTA */
+      #prox { left: 80px; right: 80px; top: 360px; }
+      #prox h2 { font-family: "Plex Mono"; font-size: 30px; letter-spacing: 6px; color: var(--verde); font-weight: 500; text-align: center; margin-bottom: 34px; }
+      .var { display: flex; align-items: center; gap: 26px; padding: 30px 34px; margin-bottom: 24px; border-radius: 30px; background: var(--card); border: 2px solid var(--borda); opacity: 0; }
+      .var b { width: 84px; height: 84px; border-radius: 22px; display: flex; align-items: center; justify-content: center; font-family: "Segoe UI Black"; font-size: 44px; color: #04140b; background: var(--verde); flex: none; }
+      .var div { font-family: "Segoe UI Black"; font-size: 48px; } .var small { display: block; font-family: "Segoe UI"; font-weight: 600; font-size: 28px; color: var(--mudo); margin-top: 4px; }
+      #segue { left: 540px; top: 1000px; transform: translate(-50%, -50%); padding: 26px 70px; border-radius: 60px; background: var(--verde); color: #04140b; font-family: "Segoe UI Black"; font-size: 64px; letter-spacing: 2px; white-space: nowrap; }
+      #aviso { left: 110px; right: 110px; top: 1150px; padding: 24px 30px; border-radius: 22px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.04);
+               text-align: center; font-size: 30px; line-height: 1.35; color: #c9d2dc; }
+      #aviso b { color: #fff; }
+      /* legenda */
+      .clip { position: absolute; left: 60px; right: 60px; bottom: 300px; display: flex; align-items: center; justify-content: center; z-index: 40; }
+      .fala { font-family: "Segoe UI Black", "Arial Black", sans-serif; font-size: 88px; line-height: 1.05; color: #fff; text-align: center; text-shadow: 0 6px 24px rgba(0,0,0,0.9), 0 2px 0 #000; }
+      .fala span { display: inline-block; margin: 0 0.12em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="1080" data-height="1920">
+      <audio id="narracao" src="narration.wav" data-start="0" data-duration="__DURACAO__" data-track-index="2"></audio>
+      <div id="fundo"></div><div id="vinheta"></div>
+      <div class="pc" id="topo"><span id="serie"></span><span id="episodio"></span></div>
+      <div id="barra"><i id="barrai"></i></div>
+
+      <!-- gancho -->
+      <svg class="pc" id="grafico" viewBox="0 0 1080 860"><defs><linearGradient id="gg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3ddc84" stop-opacity="0.25"/><stop offset="1" stop-color="#3ddc84" stop-opacity="0"/></linearGradient></defs>
+        <path id="area" d="" fill="url(#gg)"/><path id="linha" d="" fill="none" stroke="#3ddc84" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/></svg>
+      <div class="pc seta" id="sobe">↑ SUBIR</div>
+      <div class="pc seta" id="cai">↓ CAIR</div>
+      <div class="pc" id="nao">TANTO FAZ</div>
+      <div class="pc" id="gchips"><div class="chip num" style="border-color:#3ddc84;color:#3ddc84">R$ 350.000</div><i>≠</i><div class="chip num" style="border-color:#f7b733;color:#f7b733">R$ 351.500</div></div>
+      <div class="pc" id="titulo"><h1 id="tt"></h1><p id="subtitulo"></p></div>
+
+      <!-- corretoras -->
+      <div class="pc card" id="cA"><div class="h"><i style="background:#3ddc84"></i>Corretora A</div><div class="par">BTC / BRL · EXEMPLO</div>
+        <div class="preco num" id="pA">R$ 350.000</div><svg width="384" height="70" viewBox="0 0 384 70"><polyline points="0,50 40,44 80,52 120,38 160,42 200,30 240,36 280,26 320,32 384,22" fill="none" stroke="#3ddc84" stroke-width="4"/></svg>
+        <div class="tag" style="background:rgba(61,220,132,0.14);color:#3ddc84">MAIS BARATA</div>
+        <div class="btn" id="bA" style="background:rgba(61,220,132,0.12);color:#3ddc84;border:3px solid #3ddc84">COMPRAR</div>
+        <div class="saldo" id="sA">saldo pronto<b>R$ 350.000</b></div></div>
+      <div class="pc card" id="cB"><div class="h"><i style="background:#f7b733"></i>Corretora B</div><div class="par">BTC / BRL · EXEMPLO</div>
+        <div class="preco num" id="pB">R$ 351.500</div><svg width="384" height="70" viewBox="0 0 384 70"><polyline points="0,46 40,40 80,48 120,34 160,36 200,24 240,30 280,20 320,26 384,16" fill="none" stroke="#f7b733" stroke-width="4"/></svg>
+        <div class="tag" style="background:rgba(255,90,90,0.12);color:#ff5a5a">MAIS CARA</div>
+        <div class="btn" id="bB" style="background:rgba(255,90,90,0.1);color:#ff5a5a;border:3px solid #ff5a5a">VENDER</div>
+        <div class="saldo" id="sB">saldo pronto<b>1 BTC</b></div></div>
+      <div class="pc" id="dif">DIFERENÇA <span class="num" id="vDif">R$ 1.500</span></div>
+      <svg class="pc" id="rota" viewBox="0 0 1080 1920"><path id="arco" d="M275 540 C 380 320, 700 320, 805 540" fill="none" stroke="#f7b733" stroke-width="5" stroke-dasharray="14 14"/></svg>
+      <div class="pc" id="relogio">⏱ transferindo… <span class="num" id="vMin">00:00</span></div>
+      <div class="pc" id="lucro"><small id="lucroL">LUCRO</small><b class="num" id="vLucro">+R$ 0</b></div>
+      <div class="pc" id="custos" style="opacity:1">
+        <div class="custo" id="k1"><span>Taxa de compra (0,1%)</span><span>−R$ 350</span></div>
+        <div class="custo" id="k2"><span>Taxa de venda (0,1%)</span><span>−R$ 352</span></div>
+        <div class="custo" id="k3"><span>Saque + rede</span><span>−R$ 70</span></div>
+      </div>
+      <div class="pc" id="juntos">⚡ COMPRA E VENDE<br>NO MESMO INSTANTE</div>
+
+      <!-- livro de ofertas -->
+      <div class="pc" id="livro"><div class="h">Livro de ofertas · Corretora A <span>VENDAS</span></div>
+        <div class="h" style="margin-top:14px"><span>PREÇO (R$)</span><span>QTD (BTC)</span></div>
+        <div id="linhas"></div></div>
+      <div class="pc" id="ordem">COMPRAR 0,5 BTC</div>
+      <div class="pc" id="medias"><div><small>PREÇO DA TELA</small><b class="num">350.000</b></div><div><small>PREÇO MÉDIO PAGO</small><b class="num" id="vMedio" style="color:#ff5a5a">350.000</b></div></div>
+
+      <!-- robôs -->
+      <div class="pc" id="robos" style="opacity:1"></div>
+      <div class="pc" id="spread">DIFERENÇA DE R$ 900 ✦</div>
+      <div class="pc" id="cron"><small>TEMPO ATÉ SUMIR</small><span class="num" id="vCron">0,000 s</span></div>
+      <div class="pc" id="fechou">FECHOU</div>
+
+      <!-- próximo + CTA -->
+      <div class="pc" id="prox" style="opacity:1"><h2 class="pc" id="proxh" style="position:relative">PRÓXIMO VÍDEO</h2>
+        <div class="var" id="v1"><b>1</b><div><span></span><small></small></div></div>
+        <div class="var" id="v2"><b>2</b><div><span></span><small></small></div></div>
+        <div class="var" id="v3"><b>3</b><div><span></span><small></small></div></div></div>
+      <div class="pc" id="segue">SEGUE ✓</div>
+      <div class="pc" id="aviso"></div>
+
+      <canvas id="moeda3d"></canvas>
+__GRUPOS__
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      const FR = DADOS.frases, DUR = __DURACAO_NUM__;
+      const F = (n) => FR[Math.min(n, FR.length) - 1];
+      const W = 1080, H = 1920, PI = Math.PI;
+
+      // ---------- conteúdo gerado ----------
+      // gráfico do gancho (sobe e desce, determinístico)
+      (() => {
+        const pts = []; for (let i = 0; i <= 60; i++) { const x = 40 + i * 16.7; const y = 430 - Math.sin(i * 0.33) * 140 - Math.sin(i * 0.11 + 1) * 110 + Math.sin(i * 1.7) * 26; pts.push([x, y]); }
+        const d = 'M' + pts.map((p) => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L');
+        document.getElementById('linha').setAttribute('d', d);
+        document.getElementById('area').setAttribute('d', d + ' L1042 860 L40 860 Z');
+      })();
+      // textos livres do storyboard ("textos": {serie, episodio, titulo, subtitulo}); HTML simples permitido em serie e subtitulo
+      const TX = Object.assign({ serie: '', episodio: '', titulo: 'ARBITRAGEM', subtitulo: 'lucrar com a <b>diferença de preço</b><br>do mesmo ativo' }, DADOS.textos || {});
+      document.getElementById('serie').innerHTML = TX.serie; document.getElementById('episodio').textContent = TX.episodio;
+      document.getElementById('subtitulo').innerHTML = TX.subtitulo;
+      // "proximos": até 3 itens [título, detalhe] da tela de próximo vídeo; "aviso": texto do rodapé final
+      const PROX = TX.proximos || [['Parte 2', 'próximo vídeo da série'], ['Parte 3', ''], ['Parte 4', '']];
+      PROX.slice(0, 3).forEach((p, i) => { const v = document.querySelector('#v' + (i + 1) + ' div'); v.querySelector('span').textContent = p[0]; v.querySelector('small').textContent = p[1] || ''; });
+      document.getElementById('aviso').innerHTML = TX.aviso || '<b>Conteúdo educativo.</b><br>Não é recomendação de investimento.<br>Valores do vídeo são ilustrativos.';
+      const tt = document.getElementById('tt'); tt.innerHTML = [...TX.titulo].map((c) => '<span>' + (c === ' ' ? '&nbsp;' : c) + '</span>').join('');
+      const LIVRO = [[350000, 0.05], [350120, 0.08], [350300, 0.12], [350600, 0.20], [351100, 0.35], [351900, 0.60]];
+      const fmt = (v) => Math.round(v).toLocaleString('pt-BR');
+      document.getElementById('linhas').innerHTML = LIVRO.map((l, i) => `<div class="lin" id="l${i}"><div class="bar" id="lb${i}" style="width:${Math.min(100, l[1] * 150 + 8)}%"></div><span>${fmt(l[0])}</span><span>${l[1].toFixed(2).replace('.', ',')}</span></div>`).join('');
+      const roboSVG = (i) => `<svg class="robo" id="r${i}" viewBox="0 0 150 150"><rect x="30" y="44" width="90" height="74" rx="20" fill="#121a24" stroke="#3ddc84" stroke-width="5"/><line x1="75" y1="44" x2="75" y2="22" stroke="#3ddc84" stroke-width="5"/><circle cx="75" cy="18" r="8" fill="#3ddc84"/><circle cx="58" cy="78" r="10" fill="#3ddc84"/><circle cx="92" cy="78" r="10" fill="#3ddc84"/><rect x="56" y="98" width="38" height="7" rx="3" fill="#3ddc84"/></svg>`;
+      document.getElementById('robos').innerHTML = Array.from({ length: 12 }, (_, i) => roboSVG(i)).join('');
+
+      // ---------- timeline ----------
+      const tl = gsap.timeline({ paused: true });
+      const ent = (sel, t, como) => {
+        const de = { opacity: 0 }, para = { opacity: 1, duration: 0.45, ease: 'power3.out' };
+        if (como === 'baixo') { de.y = 60; para.y = 0; }
+        if (como === 'pop') { de.scale = 0.6; para.scale = 1; para.ease = 'back.out(2)'; }
+        if (como === 'bate') { de.scale = 2.2; para.scale = 1; para.duration = 0.28; para.ease = 'power4.in'; }
+        if (como === 'esq') { de.x = -80; para.x = 0; } if (como === 'dir') { de.x = 80; para.x = 0; }
+        tl.fromTo(sel, de, para, t);
+      };
+      const sai = (sel, t) => tl.to(sel, { opacity: 0, duration: 0.3, ease: 'power2.in' }, t);
+      tl.fromTo('#barrai', { scaleX: 0 }, { scaleX: 1, duration: DUR, ease: 'none' }, 0);
+      tl.fromTo('#topo', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.1);
+
+      // 1 · gancho
+      // gancho: "por que o mesmo Bitcoin tem dois preços?" → moeda + os dois preços
+      const ARB = F(3) - 1.25;                       // "...se chama arbitragem" (fim da frase 2)
+      ent('#gchips', F(1) + 1.6, 'pop');
+      sai('#gchips', F(2) - 0.05);
+      // 2 · "sem apostar se sobe ou cai" → gráfico + setas, depois o título
+      ent('#grafico', F(2) + 0.05, 'fade'); tl.to('#linha', { strokeDashoffset: 0, duration: 1.8, ease: 'power1.inOut' }, F(2) + 0.1);
+      ent('#sobe', F(2) + 1.6, 'esq'); ent('#cai', F(2) + 2.0, 'dir'); ent('#nao', ARB - 0.55, 'bate');
+      ['#grafico', '#sobe', '#cai', '#nao'].forEach((s) => sai(s, ARB - 0.1));
+      tl.set('#titulo', { opacity: 1 }, ARB);
+      tl.fromTo('#tt span', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.04, ease: 'back.out(2)' }, ARB);
+      tl.fromTo('#titulo p', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4 }, ARB + 0.5);
+      sai('#titulo', F(3) + 0.9);
+      // 3 · duas corretoras
+      ent('#cA', F(3) + 1.1, 'baixo'); ent('#cB', F(3) + 3.2, 'baixo'); ent('#dif', F(3) + 4.7, 'pop');
+      // 4 · compra / vende / lucro
+      tl.to('#bA', { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1, background: '#3ddc84', color: '#04140b' }, F(4) + 0.3);
+      tl.to('#bB', { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1, background: '#ff5a5a', color: '#1a0505' }, F(4) + 1.64);
+      ent('#lucro', F(4) + 2.7, 'pop');
+      // 5 · "só que"
+      tl.to('#lucro', { x: 18, duration: 0.05, yoyo: true, repeat: 7 }, F(5) + 0.9);
+      // 6 · custos
+      ent('#k1', F(6) + 2.5, 'esq'); ent('#k2', F(6) + 3.2, 'esq'); ent('#k3', F(6) + 3.7, 'esq');
+      // 7 · tempo
+      sai('#k1', F(7) - 0.1); sai('#k2', F(7) - 0.1); sai('#k3', F(7) - 0.1);
+      ent('#rota', F(7) + 0.9, 'fade'); ent('#relogio', F(7) + 1.0, 'pop');
+      // 8 · saldo pré-posicionado
+      sai('#rota', F(8) - 0.1); sai('#relogio', F(8) - 0.1); sai('#lucro', F(8) - 0.1);
+      tl.fromTo(['#sA', '#sB'], { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.3 }, F(8) + 2.1);
+      ent('#juntos', F(8) + 2.8, 'pop');
+      // 9 · livro de ofertas
+      ['#cA', '#cB', '#dif', '#juntos'].forEach((s) => sai(s, F(9) - 0.15));
+      ent('#livro', F(9) + 0.6, 'baixo'); ent('#medias', F(9) + 2.0, 'baixo'); ent('#ordem', F(9) + 4.2, 'bate');
+      LIVRO.slice(0, 5).forEach((l, i) => tl.to('#lb' + i, { scaleX: i < 4 ? 0 : 0.86, duration: 0.22, ease: 'power2.in' }, F(9) + 4.5 + i * 0.26));
+      LIVRO.slice(0, 4).forEach((l, i) => tl.to('#l' + i, { opacity: 0.25, duration: 0.2 }, F(9) + 4.62 + i * 0.26));
+      // 10 · robôs
+      ['#livro', '#medias', '#ordem'].forEach((s) => sai(s, F(10) - 0.15));
+      tl.fromTo('#robos .robo', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.06, ease: 'back.out(2)' }, F(10) + 0.4);
+      ent('#spread', F(10) + 1.2, 'pop'); ent('#cron', F(10) + 1.3, 'fade');
+      tl.to('#spread', { opacity: 0, duration: 0.1 }, F(10) + 2.5); ent('#fechou', F(10) + 2.5, 'bate');
+      // 11 · próximo vídeo
+      ['#robos .robo', '#cron', '#fechou'].forEach((s) => sai(s, F(11) - 0.15));
+      ent('#proxh', F(11) + 0.1, 'fade');
+      ['#v1', '#v2', '#v3'].forEach((s, i) => ent(s, F(11) + 1.3 + i * 0.35, 'dir'));
+      // 12 · CTA
+      ['#prox .var', '#proxh'].forEach((s) => sai(s, F(12) - 0.2));
+      ent('#segue', F(12) + 0.1, 'pop'); ent('#aviso', F(13) - 0.1, 'baixo');
+__ANIMACOES__
+
+      // ---------- moeda 3D + números (função pura do tempo) ----------
+      const T = THREE;
+      const renderer = new T.WebGLRenderer({ canvas: document.getElementById('moeda3d'), antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+      renderer.toneMapping = T.ACESFilmicToneMapping; renderer.outputColorSpace = T.SRGBColorSpace;
+      const scene = new T.Scene();
+      scene.environment = new T.PMREMGenerator(renderer).fromScene(new T.RoomEnvironment(), 0.04).texture;
+      const cam = new T.OrthographicCamera(0, W, 0, -H, -2000, 2000);
+      const sol = new T.DirectionalLight('#fff4dc', 2.2); sol.position.set(300, 400, 800); scene.add(sol);
+      const mkFace = (esp) => {
+        const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+        if (esp) { g.translate(512, 0); g.scale(-1, 1); }
+        const r = g.createRadialGradient(200, 180, 30, 256, 256, 260); r.addColorStop(0, '#ffe08a'); r.addColorStop(0.6, '#f7b733'); r.addColorStop(1, '#b97a12');
+        g.fillStyle = r; g.fillRect(0, 0, 512, 512);
+        g.strokeStyle = 'rgba(120,70,0,0.55)'; g.lineWidth = 16; g.beginPath(); g.arc(256, 256, 214, 0, 2 * PI); g.stroke();
+        const B = (dx, dy, cor) => { g.fillStyle = cor; g.font = '900 290px "Segoe UI Black", Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('B', 256 + dx, 262 + dy);
+          [[214, 122], [272, 122]].forEach(([x, y0]) => { g.fillRect(x + dx, y0 + dy - 40, 26, 54); g.fillRect(x + dx, y0 + dy + 258, 26, 54); }); };
+        B(8, 8, '#8a5a08'); B(0, 0, '#fff3c4');
+        const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.center.set(0.5, 0.5); t.rotation = -Math.PI / 2; return t;
+      };
+      const face = mkFace(true), face2 = mkFace(true);
+      const ouroLado = new T.MeshPhysicalMaterial({ color: '#f2a91e', metalness: 1, roughness: 0.28, clearcoat: 0.6 });
+      const ouroFace = new T.MeshPhysicalMaterial({ map: face, metalness: 0.85, roughness: 0.3, clearcoat: 0.7 });
+      const ouroFace2 = new T.MeshPhysicalMaterial({ map: face2, metalness: 0.85, roughness: 0.3, clearcoat: 0.7 });
+      const moeda = new T.Group(); scene.add(moeda);
+      const disco = new T.Mesh(new T.CylinderGeometry(1, 1, 0.16, 96), [ouroLado, ouroFace, ouroFace2]); disco.rotation.x = PI / 2; moeda.add(disco);
+      const E = (x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+      const fase = (t, a, b) => E((t - a) / (b - a));
+      const lerp = (a, b, u) => a + (b - a) * u;
+      const bez = (u, a, b, c, d) => { const v = 1 - u; return v * v * v * a + 3 * v * v * u * b + 3 * v * u * u * c + u * u * u * d; };
+      const el = (id) => document.getElementById(id);
+      const real = (v) => (v < 0 ? '−' : '+') + 'R$ ' + fmt(Math.abs(v));
+
+      function draw(t) {
+        // moeda
+        let x = 540, y = 760, r = 0, giro = t * 2.4, incl = 0.25;
+        if (t < F(3) + 0.9) {                  // gancho e título
+          const u = fase(t, F(2), F(2) + 0.6);
+          x = 540; y = lerp(720, 560, u); r = lerp(220, 120, u) * fase(t, 0, 0.5) * (1 - fase(t, F(3) + 0.5, F(3) + 0.9));
+        } else if (t >= F(4) && t < F(5)) {    // compra em A, vende em B
+          const u = fase(t, F(4) + 0.7, F(4) + 1.6);
+          x = bez(u, 275, 380, 700, 805); y = bez(u, 770, 450, 450, 770); r = 62 * fase(t, F(4) + 0.25, F(4) + 0.5) * (1 - fase(t, F(4) + 2.3, F(4) + 2.6));
+          giro = t * 6;
+        } else if (t >= F(7) && t < F(8)) {    // transferência lenta
+          const u = fase(t, F(7) + 1.2, F(8) - 0.6);
+          x = bez(u, 275, 380, 700, 805); y = bez(u, 540, 320, 320, 540); r = 52 * fase(t, F(7) + 0.9, F(7) + 1.2) * (1 - fase(t, F(8) - 0.4, F(8) - 0.1));
+          giro = t * 3;
+        } else if (t >= F(12)) {               // CTA
+          x = 540; y = 640; r = 135 * fase(t, F(12) + 0.1, F(12) + 0.6); giro = t * 1.8;
+        }
+        moeda.visible = r > 0.5; moeda.position.set(x, -y, 0); moeda.scale.setScalar(Math.max(r, 0.001));
+        moeda.rotation.set(incl * Math.sin(t * 0.9), giro % (2 * PI), 0);
+
+        // preço B cai durante a transferência
+        const fech = fase(t, F(7) + 3.4, F(7) + 4.8) * (t < F(9) ? 1 : 0);
+        const pB = lerp(351500, 350600, fech); el('pB').textContent = 'R$ ' + fmt(pB);
+        el('vDif').textContent = 'R$ ' + fmt(pB - 350000);
+        // lucro: +1.500 → custos → diferença fecha
+        let L = 1500 * fase(t, F(4) + 2.8, F(4) + 3.9);
+        L -= 350 * fase(t, F(6) + 2.5, F(6) + 2.9) + 352 * fase(t, F(6) + 3.2, F(6) + 3.6) + 70 * fase(t, F(6) + 3.7, F(6) + 4.1);
+        L -= 900 * fech;
+        el('vLucro').textContent = real(L); el('vLucro').style.color = L < 0 ? '#ff5a5a' : '#3ddc84';
+        el('vLucro').style.textShadow = L < 0 ? '0 0 60px rgba(255,90,90,0.4)' : '0 0 60px rgba(61,220,132,0.35)';
+        el('lucroL').textContent = (L < 0 ? 'PREJUÍZO' : 'LUCRO') + ' · EXEMPLO';
+        // relógio da transferência
+        const min = Math.floor(lerp(0, 14, fase(t, F(7) + 1.0, F(8) - 0.5)));
+        el('vMin').textContent = '00:' + String(min).padStart(2, '0') + ' min';
+        // preço médio no livro
+        const med = lerp(350000, 350443, fase(t, F(9) + 4.5, F(9) + 5.8)); el('vMedio').textContent = fmt(med);
+        // cronômetro dos robôs
+        el('vCron').textContent = lerp(0, 0.004, fase(t, F(10) + 1.3, F(10) + 2.5)).toFixed(3).replace('.', ',') + ' s';
+        renderer.render(scene, cam);
+      }
+      const estado = { t: 0 };
+      draw(0);
+      tl.to(estado, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => draw(estado.t) }, 0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

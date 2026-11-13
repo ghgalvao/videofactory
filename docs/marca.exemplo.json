@@ -1,0 +1,60 @@
+{
+  "nome": "Inox Exemplo",
+  "descricao": "Marca fictícia para testar as receitas biz-*. Não é cliente real.",
+  "cores": {
+    "primaria": "#1f4e79",
+    "secundaria": "#9fb3c8",
+    "destaque": "#f2a900",
+    "fundo": "#f4f6f8",
+    "texto": "#14202b"
+  },
+  "fontes": {
+    "titulo": {
+      "familia": "Impact",
+      "arquivo": null,
+      "licenca": "fonte do sistema"
+    },
+    "corpo": {
+      "familia": "Georgia",
+      "arquivo": null,
+      "licenca": "fonte do sistema"
+    }
+  },
+  "logo": {
+    "arquivo": "logo.svg",
+    "fundo_claro": true,
+    "respiro": "altura da letra do logo"
+  },
+  "tom": "técnico e próximo, sem gírias",
+  "cta": {
+    "texto": "Peça seu orçamento",
+    "acao": "WhatsApp"
+  },
+  "contatos": {
+    "instagram": "@inoxexemplo",
+    "site": "inoxexemplo.com.br",
+    "whatsapp": "(00) 00000-0000"
+  },
+  "proibidos": [
+    "citar concorrentes",
+    "prometer prazo de entrega",
+    "preços sem confirmação por escrito"
+  ],
+  "formatos": [
+    "9:16",
+    "1:1"
+  ],
+  "aprovador": {
+    "nome": "Fulano (exemplo)",
+    "prazo_resposta_dias": 2
+  },
+  "bloqueados": [
+    "regex de afirmação ou nome que nunca pode aparecer (ex.: \"certificad\")"
+  ],
+  "atencao": [
+    "regex de número ou promessa que o cliente precisa confirmar (ex.: \"gr[aá]tis\")"
+  ],
+  "vocabulario": [
+    "termo técnico ou nome próprio que o corretor deve aceitar"
+  ]
+}

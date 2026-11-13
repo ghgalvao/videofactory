@@ -1,0 +1,324 @@
+{
+ "cena": "fintech",
+ "dy": 0,
+ "tema": {
+  "verde": "#f5b301",
+  "ok": "#10b981"
+ },
+ "legenda": {
+  "texto": "#ffffff",
+  "destaque": "#f5b301"
+ },
+ "substituicoes": [
+  {
+   "de": "duzentos e três milhões",
+   "para": "203 mi"
+  },
+  {
+   "de": "quase oitenta e cinco milhões",
+   "para": "84,8 mi"
+  },
+  {
+   "de": "perto de cinquenta e cinco milhões",
+   "para": "54,7 mi"
+  },
+  {
+   "de": "cerca de trinta milhões",
+   "para": "29,9 mi"
+  },
+  {
+   "de": "perto de dezessete milhões",
+   "para": "17,4 mi"
+  },
+  {
+   "de": "pouco mais de dezesseis milhões",
+   "para": "16,3 mi"
+  },
+  {
+   "de": "dois mil e vinte e dois",
+   "para": "2022"
+  }
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "mini",
+     "texto": "CENSO 2022 · IBGE",
+     "x": 540,
+     "y": 470,
+     "entrada": "abre",
+     "frase": 1
+    },
+    {
+     "tipo": "frase",
+     "texto": "4 EM 10",
+     "g": true,
+     "s": 170,
+     "x": 540,
+     "y": 640,
+     "entrada": "bate",
+     "frase": 1,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "bonecos",
+     "n": 10,
+     "acesos": 4,
+     "x": 540,
+     "y": 900,
+     "entrada": "pop",
+     "frase": 1,
+     "atraso": 0.6,
+     "acende_frase": 1,
+     "acende_atraso": 1.6
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "EM QUAL REGIÃO?",
+     "x": 540,
+     "y": 1130,
+     "entrada": "baixo",
+     "frase": 1,
+     "atraso": 3.2
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    2
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "mini",
+     "texto": "BRASIL · POPULAÇÃO",
+     "x": 540,
+     "y": 560,
+     "entrada": "abre",
+     "frase": 2
+    },
+    {
+     "tipo": "saldo",
+     "de": 0,
+     "ate": 203,
+     "dec": 0,
+     "pre": "",
+     "suf": " mi",
+     "x": 540,
+     "y": 800,
+     "entrada": "pop",
+     "frase": 2,
+     "contar_frase": 2,
+     "contar_atraso": 1.0,
+     "dur": 2.0
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "IBGE · CENSO 2022",
+     "x": 540,
+     "y": 1010,
+     "entrada": "baixo",
+     "frase": 2,
+     "atraso": 2.4
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "mini",
+     "texto": "HABITANTES POR REGIÃO · MILHÕES",
+     "x": 540,
+     "y": 460,
+     "entrada": "abre",
+     "frase": 3
+    },
+    {
+     "tipo": "grafico",
+     "x": 540,
+     "y": 900,
+     "w": 900,
+     "eixo": 110,
+     "dec": 1,
+     "suf": " mi",
+     "entrada": "fade",
+     "frase": 3,
+     "linhas": [
+      {
+       "nome": "Sudeste",
+       "valor": 84.840113,
+       "cor": "#f5b301",
+       "frase": 3
+      },
+      {
+       "nome": "Nordeste",
+       "valor": 54.658515,
+       "cor": "#5aa9e6",
+       "frase": 4
+      },
+      {
+       "nome": "Sul",
+       "valor": 29.937706,
+       "cor": "#5aa9e6",
+       "frase": 5
+      },
+      {
+       "nome": "Norte",
+       "valor": 17.354884,
+       "cor": "#5aa9e6",
+       "frase": 6
+      },
+      {
+       "nome": "Centro-Oeste",
+       "valor": 16.289538,
+       "cor": "#5aa9e6",
+       "frase": 7
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    8
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "mini",
+     "texto": "SUDESTE × O RESTO",
+     "x": 540,
+     "y": 560,
+     "entrada": "abre",
+     "frase": 8
+    },
+    {
+     "tipo": "grafico",
+     "x": 540,
+     "y": 820,
+     "w": 900,
+     "eixo": 110,
+     "dec": 1,
+     "suf": " mi",
+     "entrada": "fade",
+     "frase": 8,
+     "destaque": {
+      "de": 63.580128,
+      "ate": 84.840113,
+      "de_linha": 0,
+      "ate_linha": 1,
+      "frase": 8,
+      "atraso": 3.0
+     },
+     "linhas": [
+      {
+       "nome": "Sudeste",
+       "valor": 84.840113,
+       "cor": "#f5b301",
+       "frase": 8,
+       "atraso": 0.2
+      },
+      {
+       "nome": "Sul + Norte + Centro-Oeste",
+       "partes": [
+        {
+         "v": 29.937706,
+         "cor": "#5aa9e6"
+        },
+        {
+         "v": 17.354884,
+         "cor": "#3fc1a5"
+        },
+        {
+         "v": 16.289538,
+         "cor": "#b48cf2"
+        }
+       ],
+       "frase": 8,
+       "atraso": 1.2
+      }
+     ]
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "MAIS QUE OS 3 JUNTOS",
+     "x": 540,
+     "y": 1130,
+     "entrada": "baixo",
+     "frase": 8,
+     "atraso": 3.4
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "frases": [
+    9
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "mini",
+     "texto": "FONTE",
+     "x": 540,
+     "y": 700,
+     "entrada": "abre",
+     "frase": 9
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "IBGE · CENSO DEMOGRÁFICO 2022",
+     "x": 540,
+     "y": 820,
+     "entrada": "baixo",
+     "frase": 9,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "frases": [
+    10
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "frase",
+     "texto": "SEGUE",
+     "g": true,
+     "x": 540,
+     "y": 760,
+     "entrada": "bate",
+     "frase": 10
+    },
+    {
+     "tipo": "mini",
+     "texto": "MAIS NÚMEROS QUE EXPLICAM O BRASIL",
+     "x": 540,
+     "y": 930,
+     "entrada": "abre",
+     "frase": 10,
+     "atraso": 0.4
+    }
+   ]
+  }
+ ]
+}

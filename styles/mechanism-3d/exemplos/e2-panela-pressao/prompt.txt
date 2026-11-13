@@ -1,0 +1,3 @@
+Faça um vídeo no estilo mechanism-3d, acabamento brinquedo, sobre como a panela de pressão cozinha mais rápido, para curiosos em geral, com 40 a 45 segundos, 9:16.
+Leia styles/mechanism-3d/STYLE.md. Roteiro: o segredo é a água passar de 100 °C; tampa travada, vapor preso, pressão maior, fervura perto de 120 °C, válvula soltando o excesso e o aviso de nunca abrir com pressão. Mostre a panela em corte com bolhas e um painel com temperatura e pressão em cada plano.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      /* Estilo pixel-avatar: fundo creme, passo numerado, título em 2 linhas, um cartão por passo e
+         um avatar em pixel art (desenhado por código, em camadas) com pose por passo e boca na fala. */
+      @font-face { font-family: "Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.ttf"); font-weight: 500; }
+      :root { --bg: #f3ecdf; --tinta: #16161a; --azul: #2d6be0; --azulc: #dfe8f8; --mudo: #8b8378; --linha: #ddd2bf; --card: #ffffff; --verde: #1f9d55; --verm: #d64545; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); color: var(--tinta); font-family: "Segoe UI", Arial, sans-serif; }
+      .passo { position: absolute; inset: 0; opacity: 0; }
+      .topo { position: absolute; left: 70px; right: 70px; top: 120px; display: flex; justify-content: space-between; align-items: center; font-family: "Plex Mono"; font-size: 30px; }
+      .cont { background: var(--azulc); color: var(--azul); padding: 6px 16px; border-radius: 10px; }
+      .trilha { color: var(--mudo); } .trilha b { color: var(--azul); font-weight: 500; }
+      .tit { position: absolute; left: 70px; right: 70px; top: 190px; font-family: "Segoe UI Black", "Arial Black", sans-serif; line-height: 1.02; letter-spacing: -2px; }
+      .tit span { display: block; font-size: 104px; }
+      .tit span + span { color: var(--azul); }
+      .regua { position: absolute; left: 70px; right: 70px; top: 440px; height: 3px; background: var(--linha); }
+      .palco { position: absolute; left: 70px; right: 70px; top: 480px; height: 520px; display: flex; align-items: center; justify-content: center; }
+      /* peças dos cartões (o storyboard monta o HTML com estas classes) */
+      .card { background: var(--card); border-radius: 26px; border: 2px solid var(--card-border, #e8dcc8); box-shadow: 0 14px 34px rgba(80, 55, 20, 0.13); }
+      #backdrop { position: absolute; inset: 0; pointer-events: none; }
+      #rig { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+      #floor { position: absolute; width: 300px; height: 34px; margin-left: -150px; border-radius: 50%; background: rgba(0,0,0,0.45); filter: blur(6px); display: none; }
+      .jan { width: 860px; overflow: hidden; }
+      .jan .bar { display: flex; align-items: center; gap: 12px; padding: 18px 26px; border-bottom: 2px solid var(--linha); font-family: "Plex Mono"; font-size: 26px; color: var(--mudo); }
+      .jan .bar i { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+      .jan .cod { padding: 26px 34px 30px; font-family: "Plex Mono"; font-size: 40px; line-height: 1.5; white-space: pre; color: var(--tinta); }
+      .kw { color: var(--azul); } .pv { color: var(--verm); } .ok { color: var(--verde); } .cm { color: #a59c8f; }
+      .lin { display: block; }
+      .tag { display: inline-block; padding: 4px 14px; border-radius: 10px; font-family: "Plex Mono"; font-size: 28px; background: var(--azulc); color: var(--azul); }
+      .linha { display: flex; gap: 24px; align-items: center; justify-content: center; }
+      .col { display: flex; flex-direction: column; gap: 22px; align-items: center; }
+      .tile { width: 150px; height: 150px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-family: "Segoe UI Black"; font-size: 80px; color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,0.15); }
+      .mini { padding: 22px 26px; font-family: "Plex Mono"; font-size: 30px; line-height: 1.45; width: 250px; }
+      .mini b { display: block; font-family: "Segoe UI Black"; font-size: 34px; margin-bottom: 6px; }
+      .seta { font-family: "Segoe UI Black"; font-size: 70px; color: var(--azul); }
+      .botao { padding: 26px 64px; border-radius: 24px; background: var(--azul); color: #fff; font-family: "Plex Mono"; font-size: 54px; box-shadow: 0 10px 0 #1d4da8; }
+      .chip { padding: 16px 26px; border-radius: 18px; font-family: "Segoe UI Black"; font-size: 40px; background: var(--card); border: 2px solid var(--card-border, #e8dcc8); }
+      .fala { padding: 14px 26px; border-radius: 18px; background: var(--tinta); color: var(--bg); font-family: "Segoe UI Black"; font-size: 40px; }
+      .carimbo { display: inline-block; border: 8px solid var(--verm); color: var(--verm); border-radius: 16px; padding: 2px 26px 8px; font-family: "Segoe UI Black"; font-size: 64px; letter-spacing: 4px; background: var(--card); box-shadow: 0 0 30px rgba(214,69,69,0.35); }
+      .flag { transition: none; border-radius: 6px; }
+      .dim[data-state=on] { opacity: 0.22; }
+      .bar-up { width: 70px; border-radius: 10px 10px 0 0; background: var(--verde); }
+      .flag[data-state=on] { color: var(--verm); background: rgba(214,69,69,0.18); }
+      .riscado[data-state=on] { text-decoration: line-through; text-decoration-color: var(--verm); text-decoration-thickness: 5px; opacity: 0.6; }
+      .big { font-family: "Segoe UI Black"; font-size: 96px; line-height: 1; }
+      .addr { font-family: "Plex Mono"; font-size: 40px; letter-spacing: 1px; }
+      #ilustrado { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; display: none; }
+      .pose { position: absolute; transform-origin: 50% 100%; display: none; }
+      .pose img, .pose canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+      #avatar { position: absolute; left: 156px; top: 1024px; width: 768px; height: 896px; image-rendering: pixelated; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="1080" data-height="1920">
+      <audio id="narracao" src="narration.wav" data-start="0" data-duration="__DURACAO__" data-track-index="2"></audio>
+      <div id="backdrop"></div>
+      <div id="passos"></div>
+      <canvas id="avatar" width="768" height="896"></canvas>
+      <div id="floor"></div>
+      <div id="rig"><div id="ilustrado"></div></div>
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      const DUR = __DURACAO_NUM__;
+      const SB = DADOS.shots, PAL = DADOS.palavras || [];
+      const TRILHA = __TRILHA__;
+
+      // ---------- theme: storyboard "theme" overrides the default cream palette ----------
+      // keys: bg, ink, accent, accentSoft, muted, line, card, cardBorder, glow (radial light behind the avatar area)
+      const THEME = DADOS.theme || {};
+      const CSS_VARS = { bg: '--bg', ink: '--tinta', accent: '--azul', accentSoft: '--azulc', muted: '--mudo', line: '--linha', card: '--card', cardBorder: '--card-border' };
+      Object.entries(CSS_VARS).forEach(([k, v]) => { if (THEME[k]) document.documentElement.style.setProperty(v, THEME[k]); });
+      if (THEME.glow) document.getElementById('backdrop').style.background =
+        `radial-gradient(900px 900px at 50% 78%, ${THEME.glow}, transparent 70%)`;
+
+      // ---------- passos (título + cartão) ----------
+      const total = SB.filter((p) => p.contador !== false).length;
+      let n = 0;
+      document.getElementById('passos').innerHTML = SB.map((p) => {
+        const num = p.contador === false ? '' : `<span class="cont">$ ${String(++n).padStart(2, '0')}/${String(total).padStart(2, '0')}</span>`;
+        return `<div class="passo" id="p${p.id}"><div class="topo">${num || '<span></span>'}${TRILHA && (TRILHA[0] || TRILHA[1]) ? `<span class="trilha">${TRILHA[0]} / <b>${TRILHA[1]}</b></span>` : ''}</div>
+          <div class="tit"><span>${p.l1 || ''}</span><span>${p.l2 || ''}</span></div><div class="regua"></div>
+          <div class="palco">${p.card || ''}</div></div>`;
+      }).join('');
+
+      const tl = gsap.timeline({ paused: true });
+      SB.forEach((p, i) => {
+        const el = '#p' + p.id, t0 = p.t0;
+        tl.set(el, { opacity: 1 }, t0);
+        tl.fromTo(el + ' .tit span', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.08, ease: 'power3.out' }, t0);
+        tl.fromTo(el + ' .palco > *', { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.8)' }, t0 + 0.12);
+        // peças com class "in" entram em sequência (data-d = atraso em s desde o início do passo)
+        // timing: data-f = script sentence number (piece enters when that sentence starts, + data-d offset);
+        // without data-f, data-d counts from the step start. Same pairs for data-on/data-onf and data-out/data-outf.
+        const F = DADOS.frases || [];
+        const at = (e, fKey, dKey, dflt) => {
+          const off = e.dataset[dKey] !== undefined ? parseFloat(e.dataset[dKey]) : dflt;
+          const f = parseInt(e.dataset[fKey], 10);
+          return f && F[f - 1] !== undefined ? F[f - 1] + off - t0 : off;
+        };
+        // data-fx: pop | stamp | left | right (default: rise); data-rot: final rotation (deg)
+        document.querySelectorAll(el + ' .in').forEach((e, k) => {
+          const d = at(e, 'f', 'd', e.dataset.f ? 0.1 : 0.45 + k * 0.32);
+          const rot = parseFloat(e.dataset.rot || (e.dataset.fx === 'stamp' ? -8 : 0));
+          const fx = {
+            pop: [{ opacity: 0, scale: 0.3, rotation: rot }, { opacity: 1, scale: 1, rotation: rot, duration: 0.4, ease: 'back.out(2.6)' }],
+            stamp: [{ opacity: 0, scale: 2.4, rotation: rot - 14 }, { opacity: 1, scale: 1, rotation: rot, duration: 0.22, ease: 'power4.in' }],
+            left: [{ opacity: 0, x: -160, rotation: rot }, { opacity: 1, x: 0, rotation: rot, duration: 0.35, ease: 'power3.out' }],
+            right: [{ opacity: 0, x: 160, rotation: rot }, { opacity: 1, x: 0, rotation: rot, duration: 0.35, ease: 'power3.out' }],
+          }[e.dataset.fx] || [{ opacity: 0, y: 24, rotation: rot }, { opacity: 1, y: 0, rotation: rot, duration: 0.3, ease: 'power2.out' }];
+          tl.fromTo(e, fx[0], fx[1], t0 + d);
+          if (e.dataset.fx === 'stamp')   // impact: the whole stage shakes briefly
+            tl.fromTo(el + ' .palco', { x: 0 }, { keyframes: [{ x: -10 }, { x: 8 }, { x: -5 }, { x: 0 }], duration: 0.22 }, t0 + d + 0.22);
+        });
+        // data-out: seconds after the step start when the piece leaves (fly up and fade)
+        document.querySelectorAll(el + ' [data-out], ' + el + ' [data-outf]').forEach((e) => {
+          tl.to(e, { opacity: 0, y: -60, scale: 0.8, duration: 0.35, ease: 'power2.in' }, t0 + at(e, 'outf', 'out', 0));
+        });
+        // data-on: seconds after the step start when the piece switches to its "on" look ([data-state=on] in CSS)
+        document.querySelectorAll(el + ' [data-on], ' + el + ' [data-onf]').forEach((e) => {
+          tl.set(e, { attr: { 'data-state': 'on' } }, t0 + at(e, 'onf', 'on', 0));
+        });
+        // .count: number that runs from data-from to data-to (data-dur s, data-dec decimals, data-pre / data-suf text)
+        document.querySelectorAll(el + ' .count').forEach((e) => {
+          const o = { v: parseFloat(e.dataset.from || 0) }, dec = parseInt(e.dataset.dec || 0, 10);
+          const fmt = (v) => (e.dataset.pre || '') + v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + (e.dataset.suf || '');
+          e.textContent = fmt(o.v);
+          tl.to(o, { v: parseFloat(e.dataset.to), duration: parseFloat(e.dataset.dur || 1.5), ease: e.dataset.ease || 'power1.inOut',
+            onUpdate: () => { e.textContent = fmt(o.v); } }, t0 + at(e, 'f', 'd', 0.3));
+        });
+        if (i < SB.length - 1) tl.to(el, { opacity: 0, duration: 0.12 }, p.t1 - 0.12);
+      });
+
+      // ---------- avatar em pixel art ----------
+      const GW = 96, GH = 112, S = 8;
+      const elip = (cx, cy, rx, ry) => (x, y) => ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2 <= 1;
+      const ret = (x0, y0, x1, y1) => (x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1;
+      const seg = (ax, ay, bx, by, r) => (x, y) => {
+        const px = x + 0.5 - ax, py = y + 0.5 - ay, vx = bx - ax, vy = by - ay;
+        const u = Math.max(0, Math.min(1, (px * vx + py * vy) / (vx * vx + vy * vy)));
+        return (px - u * vx) ** 2 + (py - u * vy) ** 2 <= r * r;
+      };
+      const uni = (...fs) => (x, y) => fs.some((f) => f(x, y));
+      const inter = (...fs) => (x, y) => fs.every((f) => f(x, y));
+      const menos = (a, b) => (x, y) => a(x, y) && !b(x, y);
+      const C = {   // personagem neutro: pessoa de blusa (troque as cores para criar outro)
+        cont: '#1a1410', pele: ['#e3ad86', '#f1c4a1', '#c48c64'], cabelo: ['#2e2219', '#433224', '#1b140e'],
+        blusa: ['#e0702d', '#f08a45', '#b4561e'], gola: ['#c45f22', '#d97232', '#9a4818'], cami: ['#f1f1ee', '#ffffff', '#d8d8d2'],
+      };
+      function pinta(g, f, cores, contorno = true, esp = 1) {
+        const [base, luz, sombra] = Array.isArray(cores) ? cores : [cores];
+        if (contorno) for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++)
+          if (!f(x, y) && (f(x - 1, y) || f(x + 1, y) || f(x, y - 1) || f(x, y + 1))) g[y * GW + x] = C.cont;
+        for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) if (f(x, y)) {
+          let c = base;
+          if (sombra && !f(x + esp, y + esp)) c = sombra;
+          if (luz && !f(x - 1, y - 1)) c = luz;
+          g[y * GW + x] = c;
+        }
+      }
+      const px = (g, x, y, c) => { if (x >= 0 && x < GW && y >= 0 && y < GH) g[y * GW + x] = c; };
+      const garras = () => {};                                                                // (sem garras: mãos humanas)
+      const manga = (g, ax, ay, bx, by) => pinta(g, seg(ax, ay, bx, by, 7), C.blusa, true, 2);
+      const pata = (g, f) => pinta(g, f, C.pele);
+
+      function corpo(g) {
+        pinta(g, uni(ret(8, 82, 87, 111), elip(48, 86, 41, 16)), C.blusa, true, 2);           // blusa
+        pinta(g, elip(48, 70, 18, 7), C.gola);                                                // gola
+        const abre = (x, y) => y >= 68 && Math.abs(x + 0.5 - 48) <= 5 + (y - 68) * 0.12;     // camiseta na abertura
+        pinta(g, abre, C.cami, false);
+        pinta(g, elip(48, 63, 9, 7), C.pele, false);                                          // pescoço
+        // cabeça
+        pinta(g, elip(28, 42, 3.5, 5), C.pele); pinta(g, elip(68, 42, 3.5, 5), C.pele);      // orelhas
+        const cab = elip(48, 41, 19.5, 21);
+        pinta(g, cab, C.pele);
+        pinta(g, inter(elip(48, 36, 21.5, 19), (x, y) => y + 0.5 < 30 + Math.abs(x + 0.5 - 48) * 0.35), C.cabelo);   // cabelo
+        pinta(g, (x, y) => y >= 47 && y <= 49 && x >= 47 && x <= 49 && !(y === 47 && x !== 48), C.pele[2], false);    // nariz
+        // olhos abertos e sobrancelhas
+        [[37, 43], [53, 59]].forEach(([a, b]) => { for (let x = a; x <= b; x++) for (let y = 39; y <= 41; y++) px(g, x, y, '#ffffff'); });
+        [[39, 41], [55, 57]].forEach(([a, b]) => { for (let x = a; x <= b; x++) for (let y = 39; y <= 41; y++) px(g, x, y, '#2a1d14'); });
+        px(g, 40, 39, '#ffffff'); px(g, 56, 39, '#ffffff');
+        pinta(g, seg(36, 35.5, 44, 35.5, 1.1), C.cabelo[0], false); pinta(g, seg(52, 35.5, 60, 35.5, 1.1), C.cabelo[0], false);
+      }
+      const POSES = {
+        neutro: () => {},
+        aponta: (g) => { manga(g, 78, 112, 84, 80); pata(g, elip(85, 73, 6, 6)); pinta(g, seg(87, 69, 92, 58, 1.7), C.pele); garras(g, [[92, 56], [93, 56]]); garras(g, [[80, 70], [81, 69]]); },
+        joinha: (g) => { manga(g, 84, 112, 66, 94); pata(g, elip(61, 89, 7, 6)); pinta(g, seg(59, 84, 59, 76, 2.2), C.pele); garras(g, [[59, 74], [58, 74]]); },
+        explica: (g) => { manga(g, 12, 112, 30, 95); manga(g, 84, 112, 66, 95); pata(g, elip(31, 90, 7.5, 5)); pata(g, elip(65, 90, 7.5, 5));
+          garras(g, [[25, 85], [28, 84], [31, 84], [34, 85], [62, 85], [65, 84], [68, 84], [71, 85]]); },
+        cruzado: (g) => { manga(g, 80, 104, 28, 97); pata(g, elip(24, 96, 5.5, 5)); manga(g, 16, 101, 68, 92); pata(g, elip(72, 91, 5.5, 5)); garras(g, [[76, 89], [77, 92], [19, 94], [19, 97]]); },
+        peito: (g) => { manga(g, 84, 112, 48, 92); pata(g, elip(42, 87, 7, 6)); garras(g, [[36, 83], [37, 81], [39, 80]]); },
+        ok: (g) => { manga(g, 86, 112, 72, 90); pata(g, elip(69, 82, 6, 6)); pinta(g, menos(elip(64, 75, 3.6, 3.6), elip(64, 75, 1.6, 1.6)), C.pele);
+          pinta(g, seg(71, 77, 74, 69, 1.5), C.pele); pinta(g, seg(73, 79, 77, 72, 1.5), C.pele); garras(g, [[74, 67], [77, 70]]); },
+      };
+      const sprite = {};
+      Object.keys(POSES).forEach((k) => {
+        const g = new Array(GW * GH).fill(null); corpo(g); POSES[k](g);
+        const c = document.createElement('canvas'); c.width = GW; c.height = GH; const cx = c.getContext('2d');
+        g.forEach((cor, i) => { if (cor) { cx.fillStyle = cor; cx.fillRect(i % GW, Math.floor(i / GW), 1, 1); } });
+        sprite[k] = c;
+      });
+      const BOCA = {   // boca por cima do sprite: [x, y, cor]
+        fechada: [[45, 55], [46, 55], [47, 55], [48, 55], [49, 55], [50, 55], [51, 54]].map(([x, y]) => [x, y, '#070708']),
+        meio: [...[45, 46, 47, 48, 49, 50, 51].map((x) => [x, 55, '#070708']), ...[46, 47, 48, 49, 50].map((x) => [x, 56, '#7a2030']), [45, 56, '#070708'], [51, 56, '#070708'], ...[46, 47, 48, 49, 50].map((x) => [x, 57, '#070708'])],
+        aberta: [...[45, 46, 47, 48, 49, 50, 51].map((x) => [x, 55, '#070708']), ...[46, 47, 48, 49, 50].map((x) => [x, 56, '#f2efe8']), ...[46, 47, 48, 49, 50].map((x) => [x, 57, '#7a2030']),
+          ...[47, 48, 49].map((x) => [x, 58, '#d4646f']), [46, 58, '#7a2030'], [50, 58, '#7a2030'], ...[45, 51].flatMap((x) => [[x, 56, '#070708'], [x, 57, '#070708'], [x, 58, '#070708']]), ...[46, 47, 48, 49, 50].map((x) => [x, 59, '#070708'])],
+        o: [[47, 55, '#070708'], [48, 55, '#070708'], [49, 55, '#070708'], [46, 56, '#070708'], [50, 56, '#070708'], [46, 57, '#070708'], [50, 57, '#070708'], [47, 58, '#070708'], [48, 58, '#070708'], [49, 58, '#070708'],
+          [47, 56, '#7a2030'], [48, 56, '#7a2030'], [49, 56, '#7a2030'], [47, 57, '#7a2030'], [48, 57, '#d4646f'], [49, 57, '#7a2030']],
+      };
+      const ctx = document.getElementById('avatar').getContext('2d');
+      const peq = document.createElement('canvas'); peq.width = GW; peq.height = GH; const pc = peq.getContext('2d');
+      const hash = (s) => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+      function bocaEm(t) {
+        for (const [s, e, w] of PAL) {
+          if (t >= s && t < e - 0.02) {
+            const k = Math.floor((t - s) / 0.085), h = hash(w + k);
+            if (k % 3 === 2) return 'meio';
+            return /[oóôu]/i.test(w) && h % 3 === 0 ? 'o' : (h % 2 ? 'aberta' : 'meio');
+          }
+        }
+        return 'fechada';
+      }
+      function desenha(t) {
+        let i = SB.length - 1; while (i > 0 && t < SB[i].t0) i--;
+        const p = SB[i], pose = POSES[p.pose] ? p.pose : 'explica';
+        pc.clearRect(0, 0, GW, GH); pc.drawImage(sprite[pose], 0, 0);
+        BOCA[bocaEm(t)].forEach(([x, y, c]) => { pc.fillStyle = c; pc.fillRect(x, y, 1, 1); });
+        const pisca = (t % 3.3) > 3.18;                                              // piscada
+        if (pisca) { pc.fillStyle = C.pele[0]; pc.fillRect(37, 39, 7, 3); pc.fillRect(53, 39, 7, 3); pc.fillStyle = '#2a1d14'; pc.fillRect(37, 41, 7, 1); pc.fillRect(53, 41, 7, 1); }
+        const pulo = t - p.t0 < 0.14 && i > 0 ? -2 : 0, resp = Math.floor(t / 0.9) % 2;  // pulinho na troca de pose + respiração
+        ctx.clearRect(0, 0, 768, 896); ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(peq, 0, (pulo + resp) * S, GW * S, GH * S);
+      }
+      // ---------- avatar ilustrado (imagem por pose + boca e piscada desenhadas por cima) ----------
+      const AV = DADOS.avatar;
+      let desenhaImg = null, scarfBuf = null;
+      if (AV && AV.poses) {
+        document.getElementById('avatar').style.display = 'none';
+        const box = document.getElementById('ilustrado'); box.style.display = 'block';
+        const esc = AV.escala || 1.35, base = AV.base || 1920, centro = AV.centro || 540;
+        const P = {};
+        Object.entries(AV.poses).forEach(([nome, c]) => {
+          const d = document.createElement('div'); d.className = 'pose';
+          const w = c.w * esc, h = c.h * esc;
+          Object.assign(d.style, { width: w + 'px', height: h + 'px', left: (centro - c.cx * esc) + 'px', top: (base - h) + 'px' });
+          const bocas = c.bocas || {};   // boca por imagem (mesma pose, só a boca muda); sem isso, a boca é desenhada por cima
+          d.innerHTML = `<img data-boca="fechada" src="${c.src}">` + Object.entries(bocas).map(([f, src]) => `<img data-boca="${f}" src="${src}" style="opacity:0">`).join('')
+            + `<canvas width="${c.w}" height="${c.h}"></canvas>`;
+          box.appendChild(d); P[nome] = { el: d, cv: d.querySelector('canvas').getContext('2d'), c };
+        });
+        const abertura = { fechada: 0, meio: 0.55, aberta: 1, o: 0.8 };
+        // halo: light outline + soft glow so a dark character stays readable on a dark background
+        if (AV.halo) box.style.filter = `drop-shadow(0 0 2px ${AV.halo}) drop-shadow(0 0 26px ${AV.halo})`;
+        // float: continuous hover (px amplitude, s period) with a floor shadow that shrinks as it rises
+        const FLOAT = AV.float ? Object.assign({ amp: 16, period: 2.6, sway: 1.5 }, AV.float === true ? {} : AV.float) : null;
+        // place: per shot, a preset name or {x, y, scale}; x/y = where the bottom-center of the character goes
+        const PRESETS = {
+          bottom: { x: centro, y: base, scale: 1 },
+          'bottom-left': { x: 330, y: base - 20, scale: 0.85 },
+          'bottom-right': { x: 750, y: base - 20, scale: 0.85 },
+          middle: { x: 540, y: 1600, scale: 1.15 },
+          'corner-left': { x: 230, y: base - 10, scale: 0.6 },
+          'corner-right': { x: 850, y: base - 10, scale: 0.6 },
+        };
+        const placeOf = (sp) => {
+          const p = sp && sp.place;
+          if (!p) return PRESETS.bottom;
+          return typeof p === 'string' ? (PRESETS[p] || PRESETS.bottom) : Object.assign({}, PRESETS.bottom, p);
+        };
+        const GLIDE = AV.glide || 0.6;
+        const ease = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+        const rig = document.getElementById('rig'), floor = document.getElementById('floor');
+        rig.style.transformOrigin = `${centro}px ${base}px`;
+        if (FLOAT) floor.style.display = 'block';
+        const placeRig = (t, i) => {
+          const to = placeOf(SB[i]), from = i > 0 ? placeOf(SB[i - 1]) : to;
+          const k = ease(Math.min(1, Math.max(0, (t - SB[i].t0) / GLIDE)));
+          const x = from.x + (to.x - from.x) * k, y = from.y + (to.y - from.y) * k, s = from.scale + (to.scale - from.scale) * k;
+          const ph = FLOAT ? Math.sin(t * 2 * Math.PI / FLOAT.period) : 0;
+          const lift = FLOAT ? FLOAT.amp * (ph + 1) : 0, tilt = FLOAT ? FLOAT.sway * Math.sin(t * 2 * Math.PI / (FLOAT.period * 1.7)) : 0;
+          rig.style.transform = `translate(${(x - centro).toFixed(1)}px, ${(y - base - lift - (FLOAT ? 40 * s : 0)).toFixed(1)}px) scale(${s.toFixed(4)}) rotate(${tilt.toFixed(2)}deg)`;
+          if (FLOAT) {
+            const fs = (0.85 - 0.25 * (ph + 1) / 2) * s;
+            Object.assign(floor.style, { left: x + 'px', top: (y - 10) + 'px', transform: `scale(${fs.toFixed(3)})`, opacity: (0.75 - 0.3 * (ph + 1) / 2).toFixed(2) });
+          }
+        };
+        desenhaImg = (t) => {
+          let i = SB.length - 1; while (i > 0 && t < SB[i].t0) i--;
+          placeRig(t, i);
+          const sp = SB[i], nome = P[sp.pose] ? sp.pose : (AV.mapa && P[AV.mapa[sp.pose]] ? AV.mapa[sp.pose] : Object.keys(P)[0]);
+          Object.values(P).forEach((q) => { q.el.style.display = 'none'; });
+          const q = P[nome], c = q.c, cv = q.cv; q.el.style.display = 'block';
+          const dt = t - sp.t0, pop = i > 0 && dt < 0.18 ? 0.965 + 0.035 * (dt / 0.18) : 1;
+          // talk tremor (whole body wobbles while speaking) is opt-in: avatar.tremor = true
+          const resp = 1 + 0.006 * Math.sin(t * 2 * Math.PI / 3.2), fala = AV.tremor && bocaEm(t) !== 'fechada' ? Math.sin(t * 9) * 0.6 : 0;
+          const bob = FLOAT ? 0 : Math.sin(t * 2 * Math.PI / 3.2) * 3;   // with float the rig already moves
+          q.el.style.transform = `translateY(${bob.toFixed(2)}px) scale(${(pop).toFixed(4)}, ${(pop * resp).toFixed(4)}) rotate(${fala.toFixed(2)}deg)`;
+          cv.clearRect(0, 0, c.w, c.h);
+          const forma = bocaEm(t), imgs = q.el.querySelectorAll('img[data-boca]');
+          if (c.bocas && Object.keys(c.bocas).length) {   // troca de imagem: o (redondo) usa a meio
+            const alvo = c.bocas[forma] ? forma : (forma === 'o' && c.bocas.meio ? 'meio' : (forma === 'fechada' ? 'fechada' : (c.bocas.aberta ? 'aberta' : 'meio')));
+            imgs.forEach((im) => { im.style.opacity = im.dataset.boca === alvo || im.dataset.boca === 'fechada' ? 1 : 0; });
+          }
+          const ab = c.bocas && Object.keys(c.bocas).length ? 0 : abertura[forma];
+          if (ab > 0 && c.boca) {                         // boca aberta (characters without "boca" have no mouth): contorno preto, interior escuro, língua
+            const [mx, my, mw] = c.boca, hh = 2 + ab * (c.bocaAlt || 10);
+            cv.save(); cv.translate(mx, my); cv.rotate((c.bocaRot || 0) * Math.PI / 180);
+            cv.beginPath(); cv.ellipse(0, hh * 0.35, mw / 2, hh / 2 + 1.5, 0, 0, Math.PI * 2); cv.fillStyle = '#0b0b0c'; cv.fill();
+            cv.beginPath(); cv.ellipse(0, hh * 0.35, mw / 2 - 2.2, hh / 2 - 0.6, 0, 0, Math.PI * 2); cv.fillStyle = '#3a1016'; cv.fill();
+            if (ab > 0.5) { cv.beginPath(); cv.ellipse(0, hh * 0.7, mw / 4, hh / 5, 0, 0, Math.PI * 2); cv.fillStyle = '#8e3a44'; cv.fill(); }
+            cv.restore();
+          }
+          if (c.scarf) {                                  // mouth hidden under a scarf/mask: that region puffs with the speech
+            // smoothed openness (average of the last ~90 ms) so the cloth moves softly, not in steps
+            const op = [0, 0.03, 0.06, 0.09].reduce((s, d) => s + abertura[bocaEm(Math.max(0, t - d))], 0) / 4;
+            const src = q.el.querySelector('img[data-boca="fechada"]');
+            if (op > 0.01 && src && src.complete) {
+              const [sx, sy, sw, sh] = c.scarf, amt = c.scarfAmt || 0.05;
+              const kx = 1 + amt * 0.4 * op, ky = 1 + amt * op;
+              const dw = sw * kx, dh = sh * ky, pad = 6;
+              const off = scarfBuf || (scarfBuf = document.createElement('canvas'));
+              off.width = Math.ceil(dw) + pad * 2; off.height = Math.ceil(dh) + pad * 2;
+              const o = off.getContext('2d');
+              o.drawImage(src, sx, sy, sw, sh, pad, pad, dw, dh);
+              o.globalCompositeOperation = 'destination-in';           // feathered ellipse so there is no visible seam
+              const W = off.width, g = o.createRadialGradient(W / 2, W / 2, 0, W / 2, W / 2, W / 2);
+              g.addColorStop(0, '#000'); g.addColorStop(0.7, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+              o.setTransform(1, 0, 0, off.height / W, 0, 0);            // squash the circle into an ellipse
+              o.fillStyle = g; o.fillRect(0, 0, W, W); o.setTransform(1, 0, 0, 1, 0, 0);
+              cv.drawImage(off, sx - (dw - sw) / 2 - pad, sy - pad);    // grows downward and to both sides, top edge fixed
+            }
+          }
+          if ((t % 3.3) > 3.17) {                         // piscada: pálpebra da cor do pelo + traço
+            (c.olhos || []).forEach(([ex, ey, ew, eh]) => {
+              cv.beginPath(); cv.ellipse(ex, ey, ew / 2 + 2, eh / 2 + 2, 0, 0, Math.PI * 2); cv.fillStyle = c.pelo || '#202022'; cv.fill();
+              cv.beginPath(); cv.moveTo(ex - ew / 2, ey + 1); cv.quadraticCurveTo(ex, ey + eh * 0.45, ex + ew / 2, ey + 1); cv.lineWidth = 2.5; cv.strokeStyle = '#050505'; cv.stroke();
+            });
+          }
+        };
+      }
+      const relogio = { t: 0 };
+      const quadro = (t) => (desenhaImg ? desenhaImg(t) : desenha(t));
+      tl.to(relogio, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => quadro(relogio.t) }, 0);
+      quadro(0);
+      window.__timelines = { main: tl };
+    </script>
+  </body>
+</html>

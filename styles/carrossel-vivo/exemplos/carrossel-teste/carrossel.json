@@ -1,0 +1,50 @@
+{
+ "titulo": "Spot × futuros: o que é basis",
+ "ritmo": "medio",
+ "tema": {
+  "fundo": "#0e1116",
+  "fundo2": "#1a2230",
+  "texto": "#f2f4f7",
+  "mudo": "#8b93a1",
+  "destaque": "#f5b942"
+ },
+ "marca": "Marca Exemplo",
+ "slides": [
+  {
+   "tipo": "capa",
+   "rotulo": "ARBITRAGEM EM 5 TELAS",
+   "titulo": "Basis é o preço da pressa",
+   "texto": "Quanto o futuro paga (ou cobra) a mais que o spot."
+  },
+  {
+   "tipo": "texto",
+   "rotulo": "01 · DEFINIÇÃO",
+   "titulo": "Basis = futuro − spot",
+   "texto": "É a diferença entre o preço do contrato futuro e o do ativo à vista, no mesmo momento."
+  },
+  {
+   "tipo": "lista",
+   "rotulo": "02 · LEITURA",
+   "titulo": "Três sinais no número",
+   "itens": [
+    "Positivo: o futuro está mais caro (contango)",
+    "Negativo: o futuro está mais barato",
+    "Perto de zero: o mercado concorda no preço"
+   ]
+  },
+  {
+   "tipo": "numero",
+   "rotulo": "03 · EXEMPLO DIDÁTICO",
+   "numero": "+1,2%",
+   "titulo": "Valores inventados para ilustrar",
+   "texto": "Futuro 101,2 e spot 100: basis de 1,2% do spot."
+  },
+  {
+   "tipo": "cta",
+   "rotulo": "PRÓXIMO PASSO",
+   "titulo": "Veja o basis ao vivo",
+   "texto": "Painel Spot × futuros.",
+   "cta": "Teste grátis"
+  }
+ ]
+}

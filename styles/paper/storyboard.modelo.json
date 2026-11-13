@@ -1,0 +1,44 @@
+{
+  "cena": "paper",
+  "legenda": {"texto": "#1b1f2a", "destaque": "#c0261f"},
+  "substituicoes": [],
+  "planos": [
+    {"id": 1, "frases": [1], "quadro": 99, "elementos": [
+      {"tipo": "faixa", "texto": "[GANCHO em até 2 linhas]", "x": 540, "y": 420, "w": 900, "s": 120, "rot": -2, "entrada": "cima"},
+      {"tipo": "objeto", "nome": "copo", "cor": "#1f4f8c", "rotulo": "A", "x": 330, "y": 960, "w": 300, "rot": -4, "entrada": "cai", "t": 0.6},
+      {"tipo": "objeto", "nome": "copo", "cor": "#7cc0ef", "rotulo": "B", "x": 750, "y": 960, "w": 300, "rot": 4, "entrada": "cai", "t": 0.9},
+      {"tipo": "carimbo", "texto": "?", "x": 540, "y": 1340, "s": 200, "entrada": "bate", "t": 1.8, "efeito": "balanca"}
+    ]},
+    {"id": 2, "frases": [2], "quadro": 99, "elementos": [
+      {"tipo": "objeto", "nome": "nuvem", "x": 540, "y": 560, "w": 460, "entrada": "cima", "t": 0.1},
+      {"tipo": "faixa", "texto": "[CONTEXTO curto]", "x": 540, "y": 1100, "w": 860, "s": 90, "rot": 1.5, "entrada": "baixo", "t": 0.6}
+    ]},
+    {"id": 3, "frases": [3], "quadro": 99, "elementos": [
+      {"tipo": "objeto", "nome": "pedra", "x": 540, "y": 880, "w": 560, "entrada": "baixo", "t": 0.1},
+      {"tipo": "selo", "texto": "[PASSO 1]", "x": 540, "y": 1300, "w": 560, "s": 72, "rot": 2, "entrada": "baixo", "t": 0.9}
+    ]},
+    {"id": 4, "frases": [4], "quadro": 99, "elementos": [
+      {"tipo": "objeto", "nome": "rio", "x": 540, "y": 850, "w": 920, "entrada": "esquerda", "t": 0.05},
+      {"tipo": "selo", "texto": "[PASSO 2]", "x": 540, "y": 1340, "w": 560, "s": 72, "rot": -2, "entrada": "baixo", "t": 1.0}
+    ]},
+    {"id": 5, "frases": [5], "quadro": 99, "elementos": [
+      {"tipo": "calendario", "topo": "[TOPO]", "grande": "[GRANDE]", "s": 150, "sub": "[sub]", "x": 540, "y": 800, "w": 760, "rot": -2, "entrada": "cai", "t": 0.05}
+    ]},
+    {"id": 6, "frases": [6], "quadro": 99, "elementos": [
+      {"tipo": "faixa", "texto": "[ROTULO do dado]", "x": 540, "y": 420, "w": 800, "s": 112, "rot": -1.5, "entrada": "cima"},
+      {"tipo": "numero", "valor": 0, "suf": " g", "x": 540, "y": 900, "s": 380, "entrada": "pop", "t": 0.5},
+      {"tipo": "carimbo", "texto": "[destaque]", "x": 540, "y": 1330, "s": 120, "entrada": "bate", "t": 2.4, "efeito": "tremor"}
+    ]},
+    {"id": 7, "frases": [7, 8], "quadro": 99, "elementos": [
+      {"tipo": "barras", "titulo": "[TÍTULO do gráfico]", "x": 540, "y": 860, "w": 940, "max": 100, "entrada": "baixo", "t": 0.05, "linhas": [
+        {"rotulo": "A", "valor": 100, "texto": "100", "cor": "#1f4f8c", "frase": 7, "atraso": 0.4},
+        {"rotulo": "B", "valor": 20, "texto": "20", "cor": "#7cc0ef", "frase": 7, "atraso": 1.6}
+      ]},
+      {"tipo": "selo", "texto": "[RESSALVA]", "x": 540, "y": 1360, "w": 600, "s": 72, "rot": -2, "entrada": "baixo", "frase": 8}
+    ]},
+    {"id": 8, "frases": [9], "quadro": 99, "elementos": [
+      {"tipo": "etiqueta", "topo": "[mais do tema]", "grande": "[chamada]", "x": 540, "y": 760, "w": 680, "entrada": "cai", "t": 0.05},
+      {"tipo": "carimbo", "texto": "segue!", "x": 540, "y": 1290, "s": 130, "entrada": "bate", "t": 1.0}
+    ]}
+  ]
+}

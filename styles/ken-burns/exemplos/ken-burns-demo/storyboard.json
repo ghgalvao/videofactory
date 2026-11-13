@@ -1,0 +1,181 @@
+{
+ "cena": "fintech",
+ "dy": 0,
+ "tema": {
+  "verde": "#ffd45c",
+  "ok": "#10b981"
+ },
+ "legenda": {
+  "texto": "#ffffff",
+  "destaque": "#ffd45c"
+ },
+ "substituicoes": [
+  {
+   "de": "quase quatro centímetros",
+   "para": "≈ 3,8 cm"
+  }
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "01.png",
+     "mov": "zoom_in"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "A LUA NO CÉU",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 1,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    2
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "02.png",
+     "mov": "pan_esq"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "SÓ AS ESTRELAS",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 2,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    3
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "03.png",
+     "mov": "zoom_out"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "AS MARÉS",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 3,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    4
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "04.png",
+     "mov": "pan_cima"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "CORAIS E A LUA CHEIA",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 4,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "frases": [
+    5
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "05.png",
+     "mov": "pan_dir"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "A INCLINAÇÃO DA TERRA",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 5,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "frases": [
+    6
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "06.png",
+     "mov": "zoom_in"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "≈ 3,8 CM POR ANO",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 6,
+     "atraso": 0.3
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "frases": [
+    7
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "imagem",
+     "arquivo": "01.png",
+     "mov": "zoom_out"
+    },
+    {
+     "tipo": "frase",
+     "texto": "SEGUE",
+     "g": true,
+     "x": 540,
+     "y": 330,
+     "entrada": "bate",
+     "frase": 7
+    }
+   ]
+  }
+ ]
+}

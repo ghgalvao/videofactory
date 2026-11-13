@@ -1,0 +1,3 @@
+Faça um vídeo curto no estilo ken-burns sobre a Lua, as marés e os corais, com 20 a 25 segundos, 9:16.
+Leia styles/ken-burns/STYLE.md. Uma imagem por frase com zoom ou pan lento e um rótulo curto em cima. Se faltar imagem, escreva 1-entrada/PEDIDO-IMAGENS.md com o prompt de cada uma antes de montar.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

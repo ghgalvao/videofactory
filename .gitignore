@@ -1,0 +1,45 @@
+# ambiente (cada máquina recria)
+.venv/
+__pycache__/
+*.pyc
+video/node_modules/
+
+# saída de render (cada sócio gera a sua)
+saida/*
+saida/*/*/3-final/
+saida/*/*/_interno/*
+!saida/*/*/_interno/capa/
+saida/**/*.mp4
+saida/**/*.mov
+saida/**/*.webm
+saida/**/*.mp3
+saida/**/*.wav
+saida/**/*.m4a
+saida/**/.trash/
+saida/**/exports/
+saida/**/scarf.json
+
+# temporários do HyperFrames (regerados a cada render)
+video/index.html
+video/narration.wav
+video/.hyperframes/
+video/assets/job/
+
+# arquivo morto local
+_arquivo/
+
+# sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# assets de projeto específico (ficam na pasta de trabalho, não no motor)
+video/assets/app/
+video/assets/brand/
+
+# amostras de voz (pessoais, nunca no repo)
+voices/
+
+# galerias do painel (caminhos do seu computador)
+galleries.json
+galleries.json.tmp

@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/three-premium.min.js"></script>
+    <style>
+      @font-face { font-family: "Orbitron"; src: url("assets/fonts/Orbitron.ttf"); font-weight: 400 900; }
+      @font-face { font-family: "Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.ttf"); font-weight: 500; }
+      :root { --laranja: #ff6b35; --frio: #4fc3ff; }
+      __TEMA__
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05070b; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: #fff; }
+      #cena { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+      #titulo { position: absolute; left: 0; right: 0; top: 0; padding-top: 120px; padding-bottom: 120px; text-align: center; opacity: 0; z-index: 10; background: linear-gradient(180deg, rgba(5,7,11,0.96) 0%, rgba(5,7,11,0.82) 62%, rgba(5,7,11,0) 100%); }
+      #titulo h1 .acc { color: var(--laranja); }
+      #titulo .tag { position: relative; display: inline-block; margin-top: 34px; padding: 12px 44px; font-family: "Plex Mono"; font-size: 36px; letter-spacing: 8px; color: #fff; text-transform: uppercase; }
+      #titulo .tag::before { content: ""; position: absolute; inset: 0; background: var(--laranja); transform: skewX(-14deg); z-index: -1; }
+      #titulo img { display: block; margin: 0 auto 40px; width: 380px; filter: drop-shadow(0 8px 28px rgba(0,0,0,0.8)); }
+      #titulo .kicker { font-family: "Plex Mono"; font-size: 34px; letter-spacing: 9px; color: var(--laranja); text-transform: uppercase; margin-bottom: 24px; }
+      #titulo h1 { font-family: "Orbitron"; font-weight: 800; font-size: 124px; line-height: 1.02; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+      .rot { position: absolute; height: 52px; line-height: 52px; font-family: "Plex Mono"; font-size: 38px; letter-spacing: 3px; white-space: nowrap; opacity: 0; padding-left: 30px;
+             transform: none; text-transform: uppercase; z-index: 12; text-shadow: 0 4px 18px rgba(0,0,0,0.9); }
+      .rot::before { content: ""; position: absolute; left: 0; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%;
+                     background: var(--laranja); box-shadow: 0 0 16px 4px rgba(255,107,53,0.8); }
+      .rot.esq { padding-left: 0; padding-right: 30px; transform: translateX(-100%); }
+      .rot.esq::before { left: auto; right: 0; }
+      #selo { position: absolute; left: 50%; top: 480px; transform: translate(-50%, -50%) rotate(-4deg); padding: 14px 40px; border: 8px solid var(--laranja);
+              color: var(--laranja); background: rgba(10,14,22,0.88); font-family: "Orbitron"; font-weight: 800; font-size: 50px; letter-spacing: 3px;
+              line-height: 1.1; text-align: center; white-space: nowrap; opacity: 0; z-index: 16; text-transform: uppercase; }
+      #fecho { position: absolute; left: 0; right: 0; top: 330px; text-align: center; opacity: 0; z-index: 14; }
+      #fecho .placa { display: inline-block; }
+      #fecho img { display: block; width: 700px; max-width: 100%; filter: drop-shadow(0 10px 34px rgba(0,0,0,0.75)); }
+      #fecho p { font-family: "Orbitron"; font-weight: 700; font-size: 34px; letter-spacing: 8px; margin-top: 30px; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+      #fecho p.handle { color: var(--laranja); font-size: 40px; letter-spacing: 3px; margin-top: 14px; text-transform: none; }
+      /* legenda palavra a palavra, terço de baixo */
+      #foto { position: absolute; left: 0; right: 0; top: 330px; height: 1050px; opacity: 0; z-index: 8; display: flex; align-items: center; justify-content: center; }
+      #foto .moldura { position: relative; overflow: hidden; border: 6px solid var(--laranja); background: #000; box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(255,107,53,0.35); }
+      #foto .wrap { position: absolute; inset: 0; }
+      #foto .wrap img { position: absolute; inset: 0; width: 100%; height: 100%; }
+      #foto .dest { position: absolute; border: 6px solid var(--laranja); border-radius: 16px; box-shadow: 0 0 30px 6px rgba(255,107,53,0.85), inset 0 0 22px rgba(255,107,53,0.5); opacity: 0; }
+      #foto .dest b { position: absolute; left: -6px; bottom: calc(100% + 12px); white-space: nowrap; padding: 10px 26px; background: var(--laranja); color: #fff; font-family: "Plex Mono"; font-weight: 500; font-size: 30px; letter-spacing: 3px; text-transform: uppercase; }
+      #foto .etiqueta { position: absolute; left: calc(50% - 480px); top: -34px; padding: 12px 36px; color: #fff; font-family: "Plex Mono"; font-size: 30px; letter-spacing: 4px; text-transform: uppercase; z-index: 2; }
+      #foto .etiqueta::before { content: ""; position: absolute; inset: 0; background: var(--laranja); transform: skewX(-14deg); z-index: -1; }
+      #chips { position: absolute; left: 0; right: 0; bottom: 430px; display: flex; flex-direction: column; align-items: center; gap: 14px; z-index: 15; }
+      .chip { display: flex; align-items: center; gap: 16px; padding: 13px 34px; border-radius: 999px; background: rgba(8,12,20,0.82); border: 3px solid; font-family: "Plex Mono"; font-weight: 500; font-size: 30px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; }
+      .chip i { width: 20px; height: 20px; border-radius: 50%; display: block; }
+      .chip.f { border-color: #4fc3ff; color: #cdeeff; } .chip.f i { background: #4fc3ff; box-shadow: 0 0 18px 5px rgba(79,195,255,0.85); }
+      .chip.q { border-color: var(--laranja); color: #ffd9c9; } .chip.q i { background: var(--laranja); box-shadow: 0 0 18px 5px rgba(255,107,53,0.85); }
+      #root.na-capa .clip { display: none !important; }
+      .clip { position: absolute; left: 50px; right: 50px; bottom: 300px; display: flex; align-items: center; justify-content: center; z-index: 20; }
+      .fala { font-family: "Orbitron"; font-weight: 800; font-size: 88px; line-height: 1.05; color: #fff; text-align: center; text-transform: uppercase;
+              letter-spacing: 2px; text-shadow: 0 6px 30px rgba(0,0,0,0.9); }
+      .fala span { display: inline-block; margin: 0 0.14em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="1080" data-height="1920">
+      <audio id="narracao" src="narration.wav" data-start="0" data-duration="__DURACAO__" data-track-index="2"></audio>
+      <canvas id="cena" data-start="0" data-duration="__DURACAO__" data-track-index="0"></canvas>
+      <div id="titulo" data-start="0" data-duration="__DURACAO__" data-track-index="1"><img id="logo-topo" alt=""><p class="kicker"></p><h1></h1><span class="tag"></span></div>
+      <div class="rot" id="r0" data-start="0" data-duration="__DURACAO__" data-track-index="3"></div>
+      <div class="rot" id="r1" data-start="0" data-duration="__DURACAO__" data-track-index="3"></div>
+      <div class="rot" id="r2" data-start="0" data-duration="__DURACAO__" data-track-index="3"></div>
+      <div id="foto" data-start="0" data-duration="__DURACAO__" data-track-index="6"><div class="moldura" id="moldura"><div class="wrap" id="foto-wrap"><img id="foto-img" alt=""></div></div><div class="etiqueta" id="foto-tag"></div></div>
+      <div id="chips" data-start="0" data-duration="__DURACAO__" data-track-index="7"><div class="chip f" id="chip-f"><i></i>FRIO · DENTRO DOS TUBOS</div><div class="chip q" id="chip-q"><i></i>QUENTE · POR FORA DOS TUBOS</div></div>
+      <div id="selo" data-start="0" data-duration="__DURACAO__" data-track-index="4"></div>
+      <div id="fecho" data-start="0" data-duration="__DURACAO__" data-track-index="5"><div class="placa"><img id="logo" alt=""></div><p id="fecho-sub"></p><p class="handle" id="fecho-handle"></p></div>
+__GRUPOS__
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      const T = THREE, PI = Math.PI;
+      const W = 1080, H = 1920;
+      const CFG = DADOS.theme || {};
+      const COR_QUENTE = CFG.destaque || '#ff6b35';
+      const TX = DADOS.textos || {};
+      const SHOTS = DADOS.shots;
+      document.querySelector('#titulo h1').innerHTML = (TX.titulo || '').replace(/\*([^*]+)\*/g, '<span class="acc">$1</span>').split('\n').join('<br>');
+      const tagEl = document.querySelector('#titulo .tag'); if (TX.tag) tagEl.textContent = TX.tag; else tagEl.remove();
+      const rootEl = document.getElementById('root');
+      document.querySelector('#titulo .kicker').textContent = TX.kicker || TX.subtitulo || '';
+      if (DADOS.logo) document.getElementById('logo-topo').src = DADOS.logo;
+      if (DADOS.logo) document.getElementById('logo').src = DADOS.logo;
+      document.getElementById('fecho-sub').textContent = TX.fecho || '';
+      document.getElementById('fecho-handle').textContent = TX.handle || '';
+
+      // ---------- renderer + pós ----------
+      const renderer = new T.WebGLRenderer({ canvas: document.getElementById('cena'), antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+      renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+      renderer.outputColorSpace = T.SRGBColorSpace;
+      renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
+      const scene = new T.Scene();
+      const pmrem = new T.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new T.RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.4;
+      scene.background = (() => {
+        const c = document.createElement('canvas'); c.width = 540; c.height = 960; const g = c.getContext('2d');
+        const r = g.createRadialGradient(270, 520, 40, 270, 520, 760);
+        r.addColorStop(0, '#1a2230'); r.addColorStop(0.55, '#0a0e15'); r.addColorStop(1, '#030407');
+        g.fillStyle = r; g.fillRect(0, 0, 540, 960);
+        const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; return t;
+      })();
+      const camera = new T.PerspectiveCamera(40, W / H, 0.1, 100);
+      const alvoRT = new T.WebGLRenderTarget(W, H, { samples: 4, type: T.HalfFloatType });
+      const composer = new T.EffectComposer(renderer, alvoRT);
+      composer.setPixelRatio(1); composer.setSize(W, H);
+      composer.addPass(new T.RenderPass(scene, camera));
+      composer.addPass(new T.UnrealBloomPass(new T.Vector2(W, H), 0.32, 0.5, 0.96));
+      composer.addPass(new T.OutputPass());
+
+      // ---------- luzes ----------
+      const key = new T.SpotLight('#fff1e0', 120, 30, 0.5, 0.6, 1.6); key.position.set(4, 6, 6); key.castShadow = true;
+      key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; scene.add(key);
+      const rim = new T.SpotLight(COR_QUENTE, 160, 30, 0.6, 0.7, 1.6); rim.position.set(-5, 3, -5); scene.add(rim);
+      const fill = new T.DirectionalLight('#7fb6ff', 0.6); fill.position.set(-4, -1, 4); scene.add(fill);
+      const chao = new T.Mesh(new T.CircleGeometry(9, 64), new T.MeshStandardMaterial({ color: '#0b0f16', metalness: 0.6, roughness: 0.42 }));
+      chao.rotation.x = -PI / 2; chao.position.y = -3.25; chao.receiveShadow = true; scene.add(chao);
+
+      // ---------- materiais ----------
+      const aco = new T.MeshPhysicalMaterial({ color: '#c3c9d1', metalness: 1, roughness: 0.28, clearcoat: 0.4, clearcoatRoughness: 0.3, side: T.DoubleSide });
+      const acoCasco = aco.clone(); acoCasco.transparent = true;
+      const acoCh = aco.clone(); acoCh.emissive = new T.Color(COR_QUENTE); acoCh.emissiveIntensity = 0;
+      const COBRE = new T.Color('#d9a27a'), AZUL = new T.Color('#2aa8ff'), CINZA = new T.Color('#454a53');
+      const acoEsc = new T.MeshPhysicalMaterial({ color: '#7d8590', metalness: 1, roughness: 0.38 });
+      const tuboMat = new T.MeshPhysicalMaterial({ color: '#d9a27a', metalness: 1, roughness: 0.25 });
+      const pintura = new T.MeshPhysicalMaterial({ color: COR_QUENTE, metalness: 0.25, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.12 });
+      const parafusoMat = new T.MeshStandardMaterial({ color: '#2a2f37', metalness: 0.9, roughness: 0.35 });
+      const ferrugem = new T.MeshStandardMaterial({ color: '#6b4a2e', metalness: 0.25, roughness: 0.92 });
+      const chumbo = new T.MeshStandardMaterial({ color: '#252a33', metalness: 0.2, roughness: 0.85, transparent: true, opacity: 0, side: T.DoubleSide, depthWrite: false });
+      const novoMat = new T.MeshPhysicalMaterial({ color: '#ffd0b0', metalness: 1, roughness: 0.2, emissive: new T.Color(COR_QUENTE), emissiveIntensity: 0.9 });
+      const sombra = (m) => { m.castShadow = true; m.receiveShadow = true; return m; };
+
+      const R = 0.6, HC = 3.2;
+      const anel = (ri, re, h, phi0 = 0, phiL = 2 * PI) => new T.LatheGeometry(
+        [new T.Vector2(ri, -h / 2), new T.Vector2(re, -h / 2), new T.Vector2(re, h / 2), new T.Vector2(ri, h / 2), new T.Vector2(ri, -h / 2)], 96, phi0, phiL);
+
+      // ---------- feixe ----------
+      const feixe = new T.Group(); scene.add(feixe);
+      [-1, 1].forEach((s) => { const m = sombra(new T.Mesh(new T.CylinderGeometry(R, R, 0.07, 96), acoEsc)); m.position.y = s * (HC / 2); feixe.add(m); });
+      const posTubos = [];
+      for (let i = -12; i <= 12; i++) for (let j = -12; j <= 12; j++) {
+        const x = (i + (j % 2 ? 0.5 : 0)) * 0.078, z = j * 0.078 * 0.866;
+        if (Math.hypot(x, z) < 0.5) posTubos.push([x, z]);
+      }
+      const NT = posTubos.length;
+      const tubos = new T.InstancedMesh(new T.CylinderGeometry(0.024, 0.024, HC + 0.12, 12), tuboMat, NT);
+      sombra(tubos); feixe.add(tubos);
+      const incrust = new T.InstancedMesh(new T.CylinderGeometry(1, 1, HC, 10), ferrugem, NT); feixe.add(incrust);
+      let idxTroca = 0, best = 9; posTubos.forEach((p, i) => { const d = Math.hypot(p[0] - 0.2, p[1]); if (d < best) { best = d; idxTroca = i; } });
+      const tuboNovo = new T.Mesh(new T.CylinderGeometry(0.026, 0.026, HC + 0.12, 12), novoMat); feixe.add(tuboNovo);
+      const scan = new T.Mesh(new T.TorusGeometry(0.62, 0.014, 8, 96), new T.MeshBasicMaterial({ color: new T.Color(0.5, 2.2, 3.4), toneMapped: false }));
+      scan.rotation.x = PI / 2; feixe.add(scan);
+      const corte = 0.28, rb = R - 0.02, aa = Math.acos(corte / rb);
+      const forma = new T.Shape(); forma.absarc(0, 0, rb, aa, 2 * PI - aa, false); forma.closePath();
+      const geoCh = new T.ExtrudeGeometry(forma, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.006, bevelSize: 0.006, bevelSegments: 2, curveSegments: 64 });
+      geoCh.rotateX(-PI / 2);
+      const N_CH = 6, YCH = [];
+      for (let k = 0; k < N_CH; k++) YCH.push(-1.25 + k * (2.5 / (N_CH - 1)));
+      const chicanas = YCH.map((y, k) => { const m = sombra(new T.Mesh(geoCh, acoCh)); m.position.y = y; m.rotation.y = k % 2 ? PI : 0; feixe.add(m); return m; });
+
+      const trilha = (() => {
+        const kk = 1.22, passo = (YCH[1] - YCH[0]) * kk, pts = [];
+        for (let i = 0; i <= 160; i++) { const y = lerp0(1.6 * kk, -1.6 * kk, i / 160); pts.push(new T.Vector3(0.42 * Math.cos(PI * (y - YCH[0] * kk) / passo), y, 0)); }
+        const m = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts), 400, 0.016, 8), new T.MeshBasicMaterial({ color: new T.Color(4.0, 1.2, 0.3), toneMapped: false, transparent: true, opacity: 0 }));
+        m.visible = false; feixe.add(m); return m;
+      })();
+      // ---------- casco em duas metades (+ revestimento) ----------
+      const metade = (phi0, lado) => {
+        const g = new T.Group(); scene.add(g);
+        g.add(sombra(new T.Mesh(new T.CylinderGeometry(R, R, HC, 96, 1, true, phi0, PI), acoCasco)));
+        g.add(new T.Mesh(new T.CylinderGeometry(R + 0.022, R + 0.022, HC - 0.1, 96, 1, true, phi0, PI), chumbo));
+        [-1, 1].forEach((s) => { const f = sombra(new T.Mesh(anel(R - 0.005, 0.74, 0.09, phi0, PI), aco)); f.position.y = s * (HC / 2 - 0.045); g.add(f); });
+        const bocal = new T.Group(); bocal.position.set(lado * (R + 0.18), lado * 1.0, 0); bocal.rotation.z = -lado * PI / 2; g.add(bocal);
+        bocal.add(sombra(new T.Mesh(new T.CylinderGeometry(0.13, 0.13, 0.4, 48), aco)));
+        const fb = sombra(new T.Mesh(anel(0.1, 0.22, 0.06), pintura)); fb.position.y = 0.2; bocal.add(fb);
+        return g;
+      };
+      const cascoA = metade(0, 1), cascoB = metade(PI, -1);
+
+      // ---------- cabeçotes ----------
+      const cabecote = (s) => {
+        const g = new T.Group(); scene.add(g);
+        const banda = sombra(new T.Mesh(new T.CylinderGeometry(R, R, 0.34, 96, 1, true), pintura)); banda.position.y = s * 0.17; g.add(banda);
+        const domo = sombra(new T.Mesh(new T.SphereGeometry(R, 96, 48, 0, 2 * PI, 0, PI / 2), pintura));
+        domo.scale.y = 0.55; domo.position.y = s * 0.34; if (s < 0) domo.rotation.x = PI; g.add(domo);
+        const fl = sombra(new T.Mesh(anel(R - 0.005, 0.74, 0.09), pintura)); fl.position.y = 0.0; g.add(fl);
+        const bocal = sombra(new T.Mesh(new T.CylinderGeometry(0.14, 0.14, 0.42, 48), aco)); bocal.position.y = s * 0.78; g.add(bocal);
+        const fb = sombra(new T.Mesh(anel(0.11, 0.24, 0.06), aco)); fb.position.y = s * 0.99; g.add(fb);
+        return g;
+      };
+      const cabTopo = cabecote(1), cabBase = cabecote(-1);
+      const NB = 24;
+      const parafusos = new T.InstancedMesh(new T.CylinderGeometry(0.022, 0.022, 0.26, 10), parafusoMat, NB * 2);
+      sombra(parafusos); scene.add(parafusos);
+
+      // ---------- fluidos e calor (brilham com o bloom) ----------
+      function lerp0(a, b, u) { return a + (b - a) * u; }
+      const hash = (n) => { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); };
+      const NF = 70, NQ = 90, NC = 90;
+      const frio = new T.InstancedMesh(new T.SphereGeometry(0.03, 12, 8), new T.MeshBasicMaterial({ color: new T.Color(0.35, 1.6, 3.2), toneMapped: false }), NF);
+      const quente = new T.InstancedMesh(new T.SphereGeometry(0.036, 12, 8), new T.MeshBasicMaterial({ color: new T.Color(4.0, 1.3, 0.35), toneMapped: false }), NQ);
+      const calor = new T.InstancedMesh(new T.SphereGeometry(0.022, 10, 6), new T.MeshBasicMaterial({ color: new T.Color(4.0, 2.2, 0.8), toneMapped: false }), NC);
+      scene.add(frio, quente, calor);
+
+      // ---------- estados (presets) e quadros-chave ----------
+      const ease = (x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * x * (x * (x * 6 - 15) + 10);
+      const clamp01 = (x) => Math.min(1, Math.max(0, x));
+      const lerp = (a, b, u) => a + (b - a) * u;
+      const BASE = { ghost: 0, hlT: 0, hlC: 0, dimT: 0, cf: 0, cq: 0, cab: 0, ab: 0, esp: 0, flow: 0, heat: 0, foul: 0, extr: 0, insp: 0, troca: 0, coat: 0, tit: 0, fech: 0, orb: 0.7, alt: 0.2, dist: 8.2, ly: 0.9, rim: 160 };
+      const PRE = {
+        capa:       { tit: 1, ghost: 0.85, flow: 1, hlT: 0.35, orb: 0.5, alt: 0.6, dist: 8.4, ly: 2.2, rim: 250 },
+        montado:    { orb: 0.75, alt: -0.3, dist: 8.0 },
+        aberto:     { cab: 1, ab: 1, esp: 0.3, ghost: 0.0, cf: 0.55, cq: 0.55, orb: 0.25, alt: 1.5, dist: 11.2, ly: 0.8 },
+        fluxo:      { cab: 1, ab: 1, esp: 1, flow: 1, cf: 0.6, cq: 0.6, orb: -0.25, alt: 1.3, dist: 10.6, ly: 0.8, rim: 220 },
+        tubos:      { cab: 1, ab: 1, esp: 0.6, flow: 1, ghost: 1, hlT: 1, cf: 1, cq: 0.25, orb: 0.12, alt: 1.0, dist: 8.4, ly: 0.8, rim: 120 },
+        casco:      { cab: 1, ab: 1, esp: 1, flow: 1, hlC: 1, dimT: 1, cf: 0.25, cq: 1, orb: -0.3, alt: 1.1, dist: 8.8, ly: 0.8, rim: 260 },
+        calor:      { cab: 1, ab: 1, esp: 0.6, flow: 1, heat: 1, cf: 1, cq: 1, orb: 0.2, alt: 0.4, dist: 6.4, ly: 0.55, rim: 220 },
+        incrusta:   { cab: 1, ab: 1, esp: 0.6, flow: 1, heat: 0.35, foul: 1, orb: 0.35, alt: 0.4, dist: 5.8, ly: 0.5, rim: 200 },
+        limpa:      { cab: 1, ab: 1, esp: 0.6, extr: 1, foul: 0, orb: -0.2, alt: 0.9, dist: 9.0, ly: 1.2 },
+        inspeciona: { cab: 1, ab: 1, esp: 0.6, extr: 1, insp: 1, orb: -0.4, alt: 0.8, dist: 8.6, ly: 1.2 },
+        troca:      { cab: 1, ab: 1, esp: 0.6, extr: 1, troca: 1, orb: -0.55, alt: 0.9, dist: 6.8, ly: 1.2 },
+        revestido:  { cab: 1, ab: 1, esp: 0.6, coat: 1, orb: -0.85, alt: 0.7, dist: 8.8, ly: 0.8 },
+        importa:    { coat: 0, orb: 0.5, alt: 0.2, dist: 7.6, ly: 1.0, rim: 270 },
+        fecho:      { fech: 1, coat: 0, orb: 0.55, alt: 0.0, dist: 9.4, ly: 2.5, rim: 200 },
+      };
+      const resolver = (p) => Object.assign({}, BASE, typeof p === 'string' ? PRE[p] : Object.assign({}, PRE[p.base || 'montado'], p));
+      SHOTS.forEach((s) => { s.kf = (s.kf && s.kf.length ? s.kf : [{ u: 0, p: s.de || 'montado' }, { u: 1, p: s.para || s.de || 'montado' }]).map((k) => ({ u: k.u, P: resolver(k.p) })); });
+      const mix = (a, b, w) => { const o = {}; for (const k in a) o[k] = lerp(a[k], b[k], w); return o; };
+      function estadoEm(t) {
+        let si = SHOTS.findIndex((s) => t >= s.t0 && t < s.t1); if (si < 0) si = t < SHOTS[0].t0 ? 0 : SHOTS.length - 1;
+        const s = SHOTS[si], u = clamp01((t - s.t0) / Math.max(s.t1 - s.t0, 0.01));
+        let i = 0; while (i < s.kf.length - 2 && u > s.kf[i + 1].u) i++;
+        const a = s.kf[i], b = s.kf[i + 1];
+        let P = mix(a.P, b.P, ease((u - a.u) / Math.max(b.u - a.u, 0.001)));
+        if (si > 0) P = mix(SHOTS[si - 1].kf[SHOTS[si - 1].kf.length - 1].P, P, ease((t - s.t0) / 0.8));  // costura com o plano anterior
+        return { P, s, si };
+      }
+
+      // ---------- rótulos, selo e posições ----------
+      const rotEls = [0, 1, 2].map((i) => document.getElementById('r' + i));
+      const fotoEl = document.getElementById('foto'), fotoWrap = document.getElementById('foto-wrap'), molduraEl = document.getElementById('moldura'), fotoImg = document.getElementById('foto-img'), fotoTag = document.getElementById('foto-tag'), cenaEl = document.getElementById('cena');
+      const seloEl = document.getElementById('selo'), tituloEl = document.getElementById('titulo'), fechoEl = document.getElementById('fecho');
+      const v3 = new T.Vector3();
+      const tela = (x, y, z) => { v3.set(x, y, z).project(camera); return [(v3.x * 0.5 + 0.5) * W, (-v3.y * 0.5 + 0.5) * H]; };
+      const mtx = new T.Matrix4();
+      const eul = new T.Euler(), qua = new T.Quaternion(), vp = new T.Vector3(), vs = new T.Vector3();
+      const setM = (inst, i, x, y, z, sx, sy, sz) => { mtx.makeScale(Math.max(sx, 1e-4), Math.max(sy, 1e-4), Math.max(sz, 1e-4)); mtx.setPosition(x, y, z); inst.setMatrixAt(i, mtx); };
+
+      function draw(t) {
+        const { P, s } = estadoEm(t);
+        // explosão guiada por parâmetros
+        const eB = ease(P.cab / 0.4), eC = ease((P.cab - 0.25) / 0.75), eS = P.ab, eF = P.esp;
+        const yTopo = HC / 2 + 0.045 + eC * 1.05, yBase = -(HC / 2 + 0.045) - eC * 1.05;
+        cabTopo.position.y = yTopo; cabBase.position.y = yBase;
+        cabTopo.rotation.y = eC * 0.6; cabBase.rotation.y = -eC * 0.6;
+        cascoA.position.x = eS * 1.15; cascoB.position.x = -eS * 1.15;
+        cascoA.rotation.y = -eS * 0.5; cascoB.rotation.y = -eS * 0.5;
+        cascoA.position.z = cascoB.position.z = -eS * 0.35;
+        const kE = 1 + eF * 0.22;
+        chicanas.forEach((m, i) => { m.position.y = YCH[i] * kE; m.rotation.y = (i % 2 ? PI : 0) + eF * 0.25 * (i % 2 ? -1 : 1); });
+        feixe.rotation.y = t * 0.05;
+        feixe.position.y = P.extr * 0.9;
+        chumbo.opacity = P.coat * 0.92;
+        acoCasco.opacity = 1 - 0.9 * P.ghost; acoCasco.depthWrite = P.ghost < 0.05;
+        acoCh.emissiveIntensity = 1.6 * P.hlC;
+        tuboMat.color.copy(COBRE).lerp(AZUL, P.hlT).lerp(CINZA, 0.85 * P.dimT);
+        tuboMat.emissive.copy(AZUL); tuboMat.emissiveIntensity = 0.6 * P.hlT;
+        trilha.visible = P.hlC > 0.02; trilha.material.opacity = P.hlC;
+        document.getElementById('chip-f').style.opacity = P.cf; document.getElementById('chip-q').style.opacity = P.cq;
+        // parafusos
+        for (let f = 0; f < 2; f++) {
+          const sg = f ? 1 : -1, y0 = sg * (HC / 2 + 0.045);
+          for (let i = 0; i < NB; i++) {
+            const ang = (i / NB) * 2 * PI, rr = 0.68, sc = 1 - ease((P.cab - (i % 6) * 0.02) / 0.35);
+            setM(parafusos, f * NB + i, Math.cos(ang) * rr, y0 + sg * ease(P.cab / 0.4) * 0.45, Math.sin(ang) * rr, sc, sc, sc);
+          }
+        }
+        parafusos.instanceMatrix.needsUpdate = true;
+        // tubos: incrustação, troca
+        const tr = P.troca, fo = P.foul;
+        for (let i = 0; i < NT; i++) {
+          const p = posTubos[i];
+          if (i === idxTroca) {
+            const saida = ease(tr / 0.5);
+            setM(tubos, i, p[0], saida * 3.2, p[1], 1, tr < 0.5 ? 1 : 1e-4, 1);
+          } else setM(tubos, i, p[0], 0, p[1], 1, 1, 1);
+          const r = fo > 0.01 && i !== idxTroca ? 0.024 + 0.013 * fo : 1e-4;
+          setM(incrust, i, p[0], 0, p[1], r, 1, r);
+        }
+        tubos.instanceMatrix.needsUpdate = true; incrust.instanceMatrix.needsUpdate = true;
+        const pn = posTubos[idxTroca];
+        tuboNovo.visible = tr > 0.5; tuboNovo.position.set(pn[0], -(1 - ease((tr - 0.5) / 0.5)) * 3.2, pn[1]);
+        scan.visible = P.insp > 0.02; scan.position.y = lerp(-1.5, 1.5, (t * 0.45) % 1); scan.scale.setScalar(0.4 + 0.6 * P.insp);
+        // fluidos: o frio sobe nos tubos; o quente desce em zigue-zague entre as chicanas
+        const vis = P.flow, frac = 1 - 0.75 * P.foul;
+        for (let i = 0; i < NF; i++) {
+          const p = posTubos[Math.floor(hash(i + 1) * NT)];
+          const u = (hash(i + 7) + t * 0.32) % 1, y = lerp(-1.62, 1.62, u);
+          const sc = hash(i + 55) < frac ? vis * Math.min(1, Math.sin(u * PI) * 3) : 0;
+          const gf = 1 + 0.9 * P.hlT; setM(frio, i, p[0], y + feixe.position.y, p[1], sc * gf, sc * 2.4 * gf, sc * gf);
+        }
+        frio.instanceMatrix.needsUpdate = true;
+        const yMin = YCH[0] * kE - 0.2, yMax = YCH[N_CH - 1] * kE + 0.2, passo = (YCH[1] - YCH[0]) * kE;
+        for (let i = 0; i < NQ; i++) {
+          const u = (hash(i + 31) + t * 0.16) % 1, y = lerp(yMax, yMin, u);
+          const x = 0.42 * Math.cos(PI * (y - YCH[0] * kE) / passo), z = (hash(i + 77) - 0.5) * 0.7;
+          const sc = (hash(i + 91) < frac ? vis * Math.min(1, Math.sin(u * PI) * 3) : 0) * (1 + 0.8 * P.hlC);
+          setM(quente, i, x * Math.cos(feixe.rotation.y) + z * Math.sin(feixe.rotation.y), y + feixe.position.y, -x * Math.sin(feixe.rotation.y) + z * Math.cos(feixe.rotation.y), sc, sc, sc);
+        }
+        quente.instanceMatrix.needsUpdate = true;
+        // calor atravessando a parede dos tubos (do casco para dentro)
+        for (let i = 0; i < NC; i++) {
+          const p = posTubos[Math.floor(hash(i + 201) * NT)], ang = hash(i + 303) * 2 * PI;
+          const u = (hash(i + 401) + t * 0.55) % 1, rr = lerp(0.085, 0.0, u), y = lerp(-1.4, 1.4, hash(i + 509));
+          const sc = P.heat * Math.sin(u * PI) * (1 - 0.7 * P.foul) * 1.3;
+          const px = p[0] + Math.cos(ang) * rr, pz = p[1] + Math.sin(ang) * rr;
+          setM(calor, i, px * Math.cos(feixe.rotation.y) + pz * Math.sin(feixe.rotation.y), y + feixe.position.y, -px * Math.sin(feixe.rotation.y) + pz * Math.cos(feixe.rotation.y), sc, sc, sc);
+        }
+        calor.instanceMatrix.needsUpdate = true;
+        // câmera
+        const orb = P.orb + t * 0.012;
+        camera.position.set(Math.sin(orb) * P.dist, P.alt, Math.cos(orb) * P.dist);
+        camera.lookAt(0, P.ly, 0); camera.updateMatrixWorld();
+        rim.intensity = P.rim;
+        // textos
+        const a = ease((t - 0.3) / 0.8);
+        tituloEl.style.opacity = P.tit; rootEl.classList.toggle('na-capa', t < 0.45); tituloEl.style.transform = 'translateY(' + (1 - P.tit) * 24 + 'px)';
+        fechoEl.style.opacity = P.fech; fechoEl.style.transform = 'translateY(' + (1 - P.fech) * 24 + 'px)';
+        const ancoras = {
+          cabecote: [0.55, yTopo + 0.45, 0], casco: [-eS * 1.15 - 0.5, 0.5, -eS * 0.35], feixe: [0.5, -0.4 + feixe.position.y, 0.2],
+          chicanas: [-0.62, YCH[1] * kE + feixe.position.y, 0], tubos: [0.18, 0.9 + feixe.position.y, 0.18], revest: [-eS * 1.15 - 0.5, 0.2, -eS * 0.35],
+          incrust: [0.2, 0.3 + feixe.position.y, 0.2], novo: [pn[0], 1.6 + feixe.position.y, pn[1]],
+        };
+        const rots = (s.rotulos || []);
+        for (let i = 0; i < rotEls.length; i++) {
+          const r = rots[i], el = rotEls[i];
+          if (!r) { el.style.opacity = 0; continue; }
+          const ini = s.t0 + (r.t || 0.5), dur = r.d || (s.t1 - ini);
+          const o = ease((t - ini) / 0.45) * (1 - ease((t - (ini + dur - 0.4)) / 0.4));
+          const an = ancoras[r.a] || ancoras.feixe, [px, py] = tela(an[0], an[1], an[2]);
+          el.textContent = r.texto; el.classList.toggle('esq', r.lado === 'e');
+          el.style.left = (px + (r.lado === 'e' ? -10 : 10)) + 'px'; el.style.top = (py - 26) + 'px'; el.style.opacity = o;
+        }
+        const sl = s.selo;
+        if (sl) {
+          const ini = s.t0 + (sl.t || 0.6), dur = sl.d || 3.5, o = ease((t - ini) / 0.3) * (1 - ease((t - (ini + dur - 0.35)) / 0.35));
+          seloEl.innerHTML = sl.texto.split(String.fromCharCode(10)).join('<br>'); seloEl.style.opacity = o;
+          seloEl.style.transform = 'translate(-50%, -50%) rotate(-4deg) scale(' + (2.0 - 1.0 * ease((t - ini) / 0.3)) + ')';
+        } else seloEl.style.opacity = 0;
+        // foto real alternando com o 3D: moldura, zoom lento com origem no assunto e destaques que acendem na fala
+        const ft = s.foto; let fotoO = 0, fIn = 0, fOut = 0;
+        if (ft) {
+          const ini = s.t0 + ft.ini, fim = s.t0 + ft.fim, k = clamp01((t - ini) / Math.max(fim - ini, 0.01));
+          fIn = ease((t - ini) / 0.9); fOut = ease((t - (fim - 0.8)) / 0.8);
+          fotoO = fIn * (1 - fOut);
+          if (fotoImg.dataset.src !== ft.src) {
+            fotoImg.src = ft.src; fotoImg.dataset.src = ft.src; fotoTag.textContent = ft.rotulo || '';
+            fotoWrap.querySelectorAll('.dest').forEach((n) => n.remove());
+            (ft.destaques || []).forEach((d) => { const e = document.createElement('div'); e.className = 'dest'; e.style.left = d.x * 100 + '%'; e.style.top = d.y * 100 + '%'; e.style.width = d.w * 100 + '%'; e.style.height = d.h * 100 + '%'; if (d.texto) e.innerHTML = '<b>' + d.texto + '</b>'; fotoWrap.appendChild(e); });
+          }
+          const z = lerp(ft.z0 || 1, ft.z1 || 1.2, ease(k));
+          fotoWrap.style.transformOrigin = (ft.ox == null ? 50 : ft.ox) + '% ' + (ft.oy == null ? 50 : ft.oy) + '%';
+          fotoWrap.style.transform = 'scale(' + z + ')';
+          molduraEl.style.width = (ft.w || 960) + 'px'; molduraEl.style.height = (ft.h || 720) + 'px';
+          fotoTag.style.left = 'calc(50% - ' + ((ft.w || 960) / 2 - 22) + 'px)'; fotoTag.style.top = (-34 + (1050 - (ft.h || 720)) / 2) + 'px';
+          fotoWrap.querySelectorAll('.dest').forEach((n, i) => { const d = ft.destaques[i], o = ease((t - (s.t0 + d.t)) / 0.35); n.style.opacity = o; n.style.transform = 'scale(' + (1.35 - 0.35 * o) + ')'; });
+        }
+        fotoEl.style.opacity = fotoO;
+        fotoEl.style.transform = 'translateY(' + ((1 - fIn) * 70 - fOut * 40) + 'px) scale(' + (0.9 + 0.1 * fIn + 0.05 * fOut) + ')';
+        fotoEl.style.filter = fotoO > 0.001 && fotoO < 0.999 ? 'blur(' + ((1 - fIn) * 14 + fOut * 12).toFixed(1) + 'px)' : 'none';
+        molduraEl.style.clipPath = 'inset(' + ((1 - fIn) * 42).toFixed(2) + '% 0 ' + ((1 - fIn) * 42).toFixed(2) + '% 0)';
+        cenaEl.style.opacity = 1 - 0.82 * fotoO;
+        composer.render();
+      }
+
+      const tl = gsap.timeline({ paused: true });
+__ANIMACOES__
+      const estado = { t: 0 };
+      draw(0.01);
+      tl.to(estado, { t: __DURACAO_NUM__, duration: __DURACAO_NUM__, ease: 'none', onUpdate: function () { draw(estado.t); } }, 0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

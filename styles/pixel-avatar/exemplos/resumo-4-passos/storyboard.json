@@ -1,0 +1,77 @@
+{
+ "cena": "pixel-avatar",
+ "trilha": [
+  "estudo",
+  "resumo"
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "pose": "aponta",
+   "contador": false,
+   "quadro": 2.4,
+   "l1": "Resumo que",
+   "l2": "funciona",
+   "card": "<div class=\"col\"><div class=\"linha\"><div class=\"tile in\" data-d=\"0.5\" style=\"background:#2d6be0\">1</div><div class=\"tile in\" data-d=\"0.8\" style=\"background:#1f9d55\">2</div><div class=\"tile in\" data-d=\"1.1\" style=\"background:#e08a2d\">3</div><div class=\"tile in\" data-d=\"1.4\" style=\"background:#b0399e\">4</div></div><span class=\"tag in\" data-d=\"2.0\">4 passos</span></div>"
+  },
+  {
+   "id": 2,
+   "frases": [
+    2
+   ],
+   "pose": "explica",
+   "quadro": 2.6,
+   "l1": "Leia tudo",
+   "l2": "antes de anotar",
+   "card": "<div class=\"card jan\"><div class=\"bar\"><i style=\"background:#ff6159\"></i><i style=\"background:#ffbd2e\"></i><i style=\"background:#28c941\"></i>&nbsp;capitulo-3.pdf</div><div class=\"cod\"><span class=\"lin in\">página 1 ✓</span><span class=\"lin in\" data-d=\"0.9\">página 2 ✓</span><span class=\"lin in\" data-d=\"1.4\">página 3 ✓</span><span class=\"lin in\" data-d=\"2.0\"><span class=\"cm\">// agora sim: caneta</span></span></div></div>"
+  },
+  {
+   "id": 3,
+   "frases": [
+    3
+   ],
+   "pose": "aponta",
+   "quadro": 2.6,
+   "l1": "Marque só",
+   "l2": "o principal",
+   "card": "<div class=\"card jan\"><div class=\"bar\"><i style=\"background:#ff6159\"></i><i style=\"background:#ffbd2e\"></i><i style=\"background:#28c941\"></i>&nbsp;anotacoes.md</div><div class=\"cod\"><span class=\"lin in\" style=\"color:#a59c8f\">exemplo, detalhe, data…</span><span class=\"lin in\" data-d=\"1.0\"><span class=\"ok\">ideia principal</span></span><span class=\"lin in\" data-d=\"1.4\" style=\"color:#a59c8f\">outro detalhe…</span></div></div>"
+  },
+  {
+   "id": 4,
+   "frases": [
+    4
+   ],
+   "pose": "peito",
+   "quadro": 2.6,
+   "l1": "Com suas",
+   "l2": "palavras",
+   "card": "<div class=\"linha\"><div class=\"card mini in\" data-d=\"0.5\"><b>copiar</b>✗ decora e esquece</div><div class=\"card mini in\" data-d=\"1.2\"><b>reescrever</b>✓ você entende</div></div>"
+  },
+  {
+   "id": 5,
+   "frases": [
+    5
+   ],
+   "pose": "ok",
+   "quadro": 2.6,
+   "l1": "Vire",
+   "l2": "perguntas",
+   "card": "<div class=\"col\"><div class=\"botao in\" data-d=\"0.5\">O que é…?</div><div class=\"botao in\" data-d=\"1.0\">Por que…?</div><div class=\"botao in\" data-d=\"1.5\">Como…?</div></div>"
+  },
+  {
+   "id": 6,
+   "frases": [
+    6
+   ],
+   "pose": "joinha",
+   "contador": false,
+   "quadro": 1.6,
+   "l1": "Segue pra",
+   "l2": "mais dicas",
+   "card": "<div class=\"col\"><span class=\"chip in\" data-d=\"0.3\">dicas de estudo</span><div class=\"botao in\" data-d=\"0.7\">Seguir</div></div>"
+  }
+ ]
+}

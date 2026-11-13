@@ -1,0 +1,11 @@
+Seu ar-condicionado não cria frio. Ele tira o calor da sala e joga lá fora.
+O split tem duas partes: a evaporadora, dentro, e a condensadora, fora.
+Entre elas, um fluido refrigerante circula por tubos de cobre.
+Dentro da sala, o fluido gelado passa pela serpentina da evaporadora e absorve o calor do ar.
+O ventilador sopra esse ar já frio de volta pra sala.
+Lá fora, o compressor aperta o fluido, que esquenta bastante.
+A serpentina da condensadora e o ventilador jogam esse calor no ar de fora.
+Depois, o fluido passa por um dispositivo de expansão, esfria de novo e volta pra dentro.
+Por isso a parte de fora sopra ar quente.
+
+Segue pra ver como funciona o próximo.

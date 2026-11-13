@@ -1,0 +1,2 @@
+Faça um vídeo de oferta de açougue com o estilo oferta-varejo a partir de um JSON, com 15 a 20 segundos, 9:16.
+Leia styles/oferta-varejo/STYLE.md. Crie 1-entrada/oferta.json com o título "Sextou no açougue", dois produtos com preço por quilo, espaço para a logo, WhatsApp e validade da oferta. Rode `uv run vf oferta <job>`, me mostre a folha e anime depois do meu ok.

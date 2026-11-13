@@ -1,0 +1,359 @@
+{
+ "cena": "paper",
+ "legenda": {
+  "texto": "#1b1f2a",
+  "destaque": "#c0261f"
+ },
+ "substituicoes": [
+  {
+   "de": "trinta e cinco gramas",
+   "para": "35 g"
+  }
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "faixa",
+     "texto": "por que o mar\né *salgado*?",
+     "x": 540,
+     "y": 420,
+     "w": 900,
+     "s": 120,
+     "rot": -2,
+     "entrada": "cima"
+    },
+    {
+     "tipo": "objeto",
+     "nome": "copo",
+     "cor": "#1f4f8c",
+     "rotulo": "MAR",
+     "x": 330,
+     "y": 960,
+     "w": 300,
+     "rot": -4,
+     "entrada": "cai",
+     "t": 0.6
+    },
+    {
+     "tipo": "objeto",
+     "nome": "copo",
+     "cor": "#7cc0ef",
+     "rotulo": "RIO",
+     "x": 750,
+     "y": 960,
+     "w": 300,
+     "rot": 4,
+     "entrada": "cai",
+     "t": 0.9
+    },
+    {
+     "tipo": "carimbo",
+     "texto": "?",
+     "x": 540,
+     "y": 1340,
+     "s": 200,
+     "entrada": "bate",
+     "t": 1.8,
+     "efeito": "balanca"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    2,
+    3
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "objeto",
+     "nome": "pedra",
+     "x": 540,
+     "y": 960,
+     "w": 560,
+     "entrada": "baixo",
+     "t": 0.1
+    },
+    {
+     "tipo": "objeto",
+     "nome": "nuvem",
+     "x": 540,
+     "y": 470,
+     "w": 460,
+     "entrada": "cima",
+     "frase": 3
+    },
+    {
+     "tipo": "carimbo",
+     "texto": "chuva ácida",
+     "x": 540,
+     "y": 1340,
+     "s": 96,
+     "frase": 3,
+     "atraso": 1.4,
+     "efeito": "tremor"
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    4
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "objeto",
+     "nome": "rio",
+     "x": 540,
+     "y": 850,
+     "w": 920,
+     "entrada": "esquerda",
+     "t": 0.05
+    },
+    {
+     "tipo": "objeto",
+     "nome": "graos",
+     "x": 360,
+     "y": 690,
+     "w": 220,
+     "entrada": "pop",
+     "t": 0.7
+    },
+    {
+     "tipo": "objeto",
+     "nome": "graos",
+     "x": 720,
+     "y": 1010,
+     "w": 220,
+     "entrada": "pop",
+     "t": 1.0
+    },
+    {
+     "tipo": "selo",
+     "texto": "sais *minerais*",
+     "x": 540,
+     "y": 1340,
+     "w": 560,
+     "s": 72,
+     "rot": 2,
+     "entrada": "baixo",
+     "t": 1.3
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    5
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "objeto",
+     "nome": "sol",
+     "x": 290,
+     "y": 470,
+     "w": 300,
+     "entrada": "cresce",
+     "t": 0.05
+    },
+    {
+     "tipo": "objeto",
+     "nome": "mar",
+     "x": 540,
+     "y": 1010,
+     "w": 980,
+     "entrada": "baixo",
+     "t": 0.1
+    },
+    {
+     "tipo": "objeto",
+     "nome": "seta",
+     "cor": "#9fb6c8",
+     "x": 680,
+     "y": 640,
+     "w": 260,
+     "rot": -90,
+     "entrada": "pop",
+     "t": 0.7
+    },
+    {
+     "tipo": "objeto",
+     "nome": "graos",
+     "x": 540,
+     "y": 1050,
+     "w": 260,
+     "entrada": "pop",
+     "t": 1.3
+    },
+    {
+     "tipo": "faixa",
+     "texto": "o *sal* fica",
+     "x": 540,
+     "y": 1350,
+     "w": 640,
+     "s": 104,
+     "rot": 1.5,
+     "entrada": "baixo",
+     "t": 1.6
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "frases": [
+    6
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "calendario",
+     "topo": "acumulando",
+     "grande": "milhões",
+     "s": 150,
+     "sub": "de anos",
+     "x": 540,
+     "y": 800,
+     "w": 760,
+     "rot": -2,
+     "entrada": "cai",
+     "t": 0.05
+    },
+    {
+     "tipo": "objeto",
+     "nome": "graos",
+     "x": 540,
+     "y": 1340,
+     "w": 420,
+     "entrada": "cresce",
+     "t": 0.7
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "frases": [
+    7
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "faixa",
+     "texto": "1 litro de *mar*",
+     "x": 540,
+     "y": 420,
+     "w": 800,
+     "s": 112,
+     "rot": -1.5,
+     "entrada": "cima"
+    },
+    {
+     "tipo": "numero",
+     "valor": 35,
+     "suf": " g",
+     "x": 540,
+     "y": 900,
+     "s": 380,
+     "entrada": "pop",
+     "t": 0.5
+    },
+    {
+     "tipo": "carimbo",
+     "texto": "de sal",
+     "x": 540,
+     "y": 1330,
+     "s": 120,
+     "entrada": "bate",
+     "t": 2.4,
+     "efeito": "tremor"
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "frases": [
+    8,
+    9,
+    10
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "barras",
+     "titulo": "sal em 1 litro",
+     "x": 540,
+     "y": 860,
+     "w": 940,
+     "max": 35,
+     "entrada": "baixo",
+     "t": 0.05,
+     "linhas": [
+      {
+       "rotulo": "Mar",
+       "valor": 35,
+       "texto": "35 g",
+       "cor": "#1f4f8c",
+       "frase": 8,
+       "atraso": 0.1
+      },
+      {
+       "rotulo": "Rio",
+       "valor": 0.5,
+       "texto": "< 0,5 g",
+       "cor": "#7cc0ef",
+       "frase": 9,
+       "atraso": 0.4
+      }
+     ]
+    },
+    {
+     "tipo": "selo",
+     "texto": "rio se *renova*",
+     "x": 540,
+     "y": 1240,
+     "w": 600,
+     "s": 72,
+     "rot": -2,
+     "entrada": "baixo",
+     "frase": 10
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "frases": [
+    11
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "etiqueta",
+     "topo": "mais perguntas",
+     "grande": "simples",
+     "x": 540,
+     "y": 760,
+     "w": 680,
+     "entrada": "cai",
+     "t": 0.05
+    },
+    {
+     "tipo": "carimbo",
+     "texto": "segue!",
+     "x": 540,
+     "y": 1290,
+     "s": 130,
+     "entrada": "bate",
+     "t": 1.0
+    }
+   ]
+  }
+ ]
+}

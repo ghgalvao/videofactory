@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=__W__, height=__H__" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Barlow Condensed"; src: url("assets/fonts/BarlowCondensed-SemiBold.ttf"); font-weight: 600; }
+      @font-face { font-family: "Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.ttf"); font-weight: 500; }
+      :root { --ftitulo: "Barlow Condensed"; --ktitulo: 1; }
+      __TEMA__
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: __W__px; height: __H__px; overflow: hidden; background: var(--fundo); }
+      #root { position: relative; width: __W__px; height: __H__px; overflow: hidden; color: var(--texto);
+        font-family: "Segoe UI", Arial, sans-serif; background: var(--fundo); }
+      #luz { position: absolute; left: -200px; top: -260px; width: 1100px; height: 1100px; border-radius: 50%;
+        background: radial-gradient(circle, var(--fundo2) 0%, transparent 68%); }
+      #vfundo { position: absolute; left: 0; top: 0; width: __W__px; height: __H__px; object-fit: cover; opacity: 0.8; }
+      #veu { display: none; position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,17,22,0.95) 0%, rgba(14,17,22,0.8) 50%, rgba(14,17,22,0.45) 100%); }
+      .tem-fundo #veu { display: block; }
+      #img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+      #miolo { position: absolute; left: 96px; right: 96px; top: var(--mt, 150px); bottom: var(--mb, 170px); display: flex; flex-direction: column;
+        justify-content: center; gap: 34px; }
+      .t-capa #miolo { justify-content: flex-end; }
+      .rotulo { font: 500 28px "Plex Mono", Consolas, monospace; letter-spacing: 0.2em; color: var(--destaque); text-transform: uppercase; }
+      .titulo { font: 600 calc(112px * var(--ktitulo))/1.02 var(--ftitulo), "Segoe UI", sans-serif; letter-spacing: -0.005em; text-transform: none; }
+      .t-capa .titulo { font-size: calc(150px * var(--ktitulo)); line-height: 0.98; }
+      .titulo .w { display: inline-block; margin-right: 0.22em; }
+      #miolo > * { flex: none; }
+      .t-numero .titulo { font-size: calc(76px * var(--ktitulo)); }
+      .texto { font-size: 44px; line-height: 1.32; color: var(--mudo); max-width: 860px; }
+      .numero { font: 600 calc(300px * var(--ktitulo))/0.9 var(--ftitulo), sans-serif; color: var(--destaque); letter-spacing: -0.02em; }
+      .item { display: flex; gap: 28px; align-items: baseline; font-size: 46px; line-height: 1.28; padding: 26px 0; border-top: 2px solid var(--fundo2); }
+      .item b { font: 500 30px "Plex Mono", monospace; color: var(--destaque); flex: 0 0 56px; }
+      .chip { align-self: flex-start; font: 500 30px "Plex Mono", monospace; padding: 12px 26px; border-radius: 999px; background: var(--fundo2); color: var(--texto); }
+      .cta { align-self: flex-start; font: 600 calc(54px * var(--ktitulo)) var(--ftitulo), sans-serif; padding: 22px 52px; border-radius: 14px;
+        background: var(--destaque); color: var(--fundo); letter-spacing: 0.02em; }
+      .barra { height: 8px; width: 160px; background: var(--destaque); border-radius: 4px; transform-origin: left center; }
+      #logo { height: 54px; width: auto; display: block; }
+      #canto { position: absolute; right: 72px; top: var(--lt, 64px); z-index: 5; filter: drop-shadow(0 4px 16px rgba(0,0,0,.6)); }
+      .com-logo #miolo { top: max(var(--mt, 150px), calc(var(--lt, 64px) + 140px)); }
+      #rodape { position: absolute; left: 96px; right: 96px; bottom: var(--rb, 70px); display: flex; justify-content: space-between;
+        font: 500 26px "Plex Mono", monospace; color: var(--mudo); }
+      #prog { position: absolute; left: 0; bottom: 0; height: 8px; background: var(--destaque); width: 0; }
+
+      /* forma da marca (marca.json > forma): fundo diagonal, etiquetas e faixas inclinadas, título em caixa alta */
+      #root.forma-inclinada { background: linear-gradient(165deg, var(--gb), var(--gc)); }
+      #root.forma-inclinada::before { content: ""; position: absolute; inset: 0; background: var(--ga); opacity: .55;
+        clip-path: polygon(0 0, 58% 0, 30% 100%, 0 100%); }
+      .forma-inclinada #luz { display: none; }
+      .forma-inclinada #veu { background: linear-gradient(to top, rgba(var(--veu), .94) 0%, rgba(var(--veu), .66) 42%, rgba(var(--veu), .22) 100%); }
+      .forma-inclinada #img { opacity: 1; }
+      .forma-inclinada .rotulo { align-self: flex-start; }
+      .forma-inclinada .titulo { text-transform: uppercase; font-weight: 800; letter-spacing: .01em; }
+      .forma-inclinada .texto { font-style: italic; color: #e6edf7; }
+      .forma-inclinada .rotulo, .forma-inclinada .cta, .forma-inclinada .chip { position: relative; isolation: isolate; padding: 12px 34px; color: #fff; border-radius: 0; background: none; }
+      .forma-inclinada .cta { padding: 20px 56px; }
+      .forma-inclinada .rotulo::before, .forma-inclinada .cta::before, .forma-inclinada .chip::before, .forma-inclinada .item::before, .forma-inclinada .item b::before {
+        content: ""; position: absolute; z-index: -1; transform: skewX(-14deg); }
+      .forma-inclinada .rotulo::before, .forma-inclinada .cta::before, .forma-inclinada .chip::before { inset: 0; background: var(--destaque); }
+      .forma-inclinada .item { position: relative; isolation: isolate; border: 0; padding: 22px 30px 22px 22px; margin-bottom: 14px; gap: 34px; }
+      .forma-inclinada .item::before { inset: 0; background: rgba(255,255,255,.09); }
+      .forma-inclinada .item b { position: relative; isolation: isolate; color: #fff; flex: 0 0 64px; text-align: center; }
+      .forma-inclinada .item b::before { inset: -12px -8px; background: var(--destaque); }
+      .forma-inclinada #logo { height: 96px; }
+      .forma-inclinada #rodape { color: #cfe0f5; }
+
+      .fig { width: 100%; max-height: 700px; object-fit: contain; }
+      .t-destaque #miolo { justify-content: center; align-items: center; text-align: center; }
+      .t-destaque .titulo { font-size: calc(190px * var(--ktitulo)); line-height: 1.05; text-align: center; }
+      .t-destaque .rotulo { font-size: 40px; align-self: center !important; }
+      .logo-rotulo { align-self: center; }
+      .logo-rotulo img { display: block; height: 130px; width: auto; filter: drop-shadow(0 4px 16px rgba(0,0,0,.5)); }
+      .t-destaque #rodape, .t-destaque #pag { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="__W__" data-height="__H__">
+      <div id="luz"></div>
+      __VIDEO__
+      <div id="veu"></div>
+      <div id="miolo"></div>
+      <div id="canto"></div>
+      <div id="rodape"><span id="marca"></span><span id="pag"></span></div>
+      <div id="prog"></div>
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      const S = DADOS.slide;
+      const root = document.getElementById('root');
+      root.classList.add('t-' + S.tipo);
+      if (DADOS.forma) root.classList.add('forma-inclinada');
+      if (S.imagem || S.video) root.classList.add('tem-fundo');
+      const logoNoRotulo = S.tipo === 'destaque' && DADOS.logo;  // capa de destaque: a logo ocupa o lugar do rótulo, sem logo no canto
+      if (DADOS.logo && !logoNoRotulo) { const lg = document.createElement('img'); lg.id = 'logo'; lg.src = DADOS.logo; document.getElementById('canto').replaceChildren(lg); root.classList.add('com-logo'); }  // logo sempre no canto superior direito
+      else if (!DADOS.logo) document.getElementById('marca').textContent = DADOS.marca;
+      document.getElementById('pag').textContent = S.idx + ' / ' + S.total;
+      if (S.imagem) { const im = document.createElement('img'); im.id = 'img'; im.src = S.imagem; root.insertBefore(im, root.firstChild.nextSibling); }
+
+      const miolo = document.getElementById('miolo');
+      const esc = (t) => { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+      for (const e of S.elementos) {
+        const el = document.createElement('div');
+        el.id = e.id; el.className = e.papel;
+        if (e.papel === 'titulo') el.innerHTML = e.texto.split(' ').map((w) => '<span class="w">' + esc(w) + '</span>').join('');
+        else if (e.papel === 'item') el.innerHTML = '<b>' + String(e.ordem).padStart(2, '0') + '</b><span>' + esc(e.texto) + '</span>';
+        else if (e.papel === 'rotulo' && logoNoRotulo) { el.className = 'logo-rotulo'; el.innerHTML = '<img alt="" src="' + DADOS.logo + '">'; }
+        else el.textContent = e.texto;
+        miolo.appendChild(el);
+      }
+
+      if (S.figura) {
+        const fg = document.createElement('img'); fg.id = 'fig'; fg.className = 'fig'; fg.src = S.figura; miolo.appendChild(fg);
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#luz', { x: -40, y: -20 }, { x: 60, y: 40, duration: S.dur, ease: 'sine.inOut' }, 0);
+      tl.fromTo('#prog', { width: 0 }, { width: __W__, duration: S.dur, ease: 'none' }, 0);
+      for (const e of S.elementos) {
+        const sel = '#' + e.id;
+        if (e.entrada === 'palavras') tl.from(sel + ' .w', { y: 70, opacity: 0, duration: 0.42, ease: 'power3.out', stagger: 0.06 }, e.t);
+        else if (e.entrada === 'sobe') tl.from(sel, { y: 40, opacity: 0, duration: 0.5, ease: 'power2.out' }, e.t);
+        else if (e.entrada === 'direita') tl.from(sel, { x: 90, opacity: 0, duration: 0.45, ease: 'power3.out' }, e.t);
+        else if (e.entrada === 'bate') tl.from(sel, { scale: 1.5, opacity: 0, transformOrigin: 'left center', duration: 0.38, ease: 'back.out(1.8)' }, e.t);
+        else if (e.entrada === 'barra') tl.from(sel, { scaleX: 0, duration: 0.5, ease: 'power3.out' }, e.t);
+        else tl.from(sel, { opacity: 0, duration: 0.35, ease: 'power1.out' }, e.t);
+      }
+      if (S.figura) tl.from('#fig', { opacity: 0, y: 30, duration: 0.5, ease: 'power2.out' }, S.t_fig);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

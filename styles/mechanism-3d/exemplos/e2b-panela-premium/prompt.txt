@@ -1,0 +1,2 @@
+Refaça o vídeo da panela de pressão (mesmo roteiro e storyboard do exemplo e2-panela-pressao) no estilo mechanism-3d com acabamento premium: materiais realistas, iluminação de estúdio e fundo escuro.
+Leia styles/mechanism-3d/STYLE.md, troque só o "look" para premium, gere a folha e espere meu ok antes de animar.

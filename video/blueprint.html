@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Barlow Condensed"; src: url("assets/fonts/BarlowCondensed-SemiBold.ttf"); font-weight: 600; }
+      @font-face { font-family: "Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.ttf"); font-weight: 500; }
+      @font-face { font-family: "Orbitron"; src: url("assets/fonts/Orbitron.ttf"); font-weight: 400 900; }
+      :root { --azul: #0b3a6b; --grade: #1d5a96; --gradeF: rgba(79,160,230,0.55); --linha: #ffffff; --cota: #ffd23f; --ciano: #4fe3ff;
+              --brilho: rgba(79,227,255,0.75); --sombra: rgba(2,20,45,0.7); --stampbg: rgba(11,58,107,0.88); --ftitulo: "Barlow Condensed"; --fbloco: "Plex Mono"; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--azul); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Barlow Condensed", sans-serif; color: var(--linha); }
+      .papel { background-color: var(--azul);
+               background-image: linear-gradient(var(--gradeF) 2px, transparent 2px), linear-gradient(90deg, var(--gradeF) 2px, transparent 2px),
+                                 linear-gradient(var(--grade) 1px, transparent 1px), linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+               background-size: 200px 200px, 200px 200px, 40px 40px, 40px 40px; background-position: 0 0; }
+      #fundo { position: absolute; inset: 0; }
+      #vinheta { position: absolute; inset: 0; box-shadow: inset 0 0 220px var(--sombra); }
+      #bloco { position: absolute; left: 60px; right: 60px; top: 70px; border: 3px solid #fff; padding: 10px 18px; font-family: var(--fbloco), monospace; font-size: 30px;
+               display: flex; justify-content: space-between; letter-spacing: 1px; }
+      .plano.clip { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: block; }
+      .lousa { position: absolute; left: 0; top: 0; overflow: visible; }
+      .txt { position: absolute; transform: translate(-50%, -50%); font-weight: 600; line-height: 1.02; text-align: center; white-space: nowrap; opacity: 0; text-transform: uppercase; letter-spacing: 2px; }
+      .txt.mono { font-family: "Plex Mono", monospace; font-weight: 500; letter-spacing: 0; }
+      .txt span { opacity: 0; }
+      .stamp { position: absolute; transform: translate(-50%, -50%); }
+      .stampi { border: 10px solid; padding: 6px 30px; font-family: var(--ftitulo), sans-serif; font-weight: 600; text-transform: uppercase; text-align: center; line-height: 1.02; letter-spacing: 4px; white-space: nowrap; opacity: 0; background: var(--stampbg); }
+      .img { position: absolute; transform: translate(-50%, -50%); opacity: 0; }
+      .img img { display: block; width: 100%; height: auto; }
+      .img.foto { overflow: hidden; border: 4px solid var(--linha); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+      .img.cartao { background: #f1f5f9; border-radius: 26px; padding: 36px 44px; box-shadow: 0 24px 60px rgba(0,0,0,0.45); }
+      .folha { position: absolute; right: 80px; top: 80px; font-family: "Plex Mono", monospace; font-size: 30px; letter-spacing: 1px; color: #fff; }
+      .limpa { position: absolute; inset: 0; clip-path: inset(0 100% 0 0); }
+      .apagador { position: absolute; left: -12px; top: 0; width: 10px; height: 1920px; background: var(--ciano); box-shadow: 0 0 30px 8px var(--brilho); }
+      /* legenda */
+      .clip { position: absolute; left: 70px; right: 70px; bottom: 210px; display: flex; align-items: center; justify-content: center; z-index: 50; }
+      .fala { font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 110px; line-height: 1.02; color: #fff; text-align: center; text-transform: uppercase; letter-spacing: 2px;
+              text-shadow: 0 4px 0 var(--sombra); }
+      .fala span { display: inline-block; margin: 0 0.12em; }
+    </style>
+    <style>__TEMA__</style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="1080" data-height="1920">
+      <audio id="narracao" src="narration.wav" data-start="0" data-duration="__DURACAO__" data-track-index="2"></audio>
+      <div id="fundo" class="papel" data-start="0" data-duration="__DURACAO__" data-track-index="0"></div>
+      <div id="vinheta" data-start="0" data-duration="__DURACAO__" data-track-index="0"></div>
+__PLANOS__
+      <div id="bloco" data-start="0" data-duration="__DURACAO__" data-track-index="3"><span>__TITULO__</span><span>&nbsp;</span></div>
+__GRUPOS__
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      document.querySelectorAll('.limpa').forEach((e) => e.classList.add('papel'));
+      const tl = gsap.timeline({ paused: true });
+      function traco(sel, t, dur) {
+        tl.set(sel, { opacity: 1, strokeDashoffset: 1 }, t);
+        tl.to(sel, { strokeDashoffset: 0, duration: dur, ease: 'none' }, t);
+      }
+      function escreve(sel, n, t, passo) {
+        for (let i = 0; i < n; i++) tl.set(sel + 'c' + i, { opacity: 1 }, t + i * passo);
+      }
+      function carimbo(sel, t) {
+        tl.fromTo(sel, { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.26, ease: 'back.out(2)' }, t);
+      }
+      function apaga(limpa, apagador, t) {
+        tl.to(limpa, { clipPath: 'inset(0 0% 0 0)', duration: 0.4, ease: 'power1.inOut' }, t);
+        tl.fromTo(apagador, { x: 0 }, { x: 1100, duration: 0.4, ease: 'power1.inOut' }, t);
+      }
+
+__ANIM_PLANOS__
+__ANIMACOES__
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

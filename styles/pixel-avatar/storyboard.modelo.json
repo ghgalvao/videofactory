@@ -1,0 +1,44 @@
+{
+ "cena": "pixel-avatar",
+ "trilha": [
+  "canal",
+  "tema"
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "pose": "aponta",
+   "contador": false,
+   "quadro": 2.4,
+   "l1": "[Gancho em",
+   "l2": "duas linhas]",
+   "card": "<div class=\"col\"><span class=\"tag in\" data-d=\"0.6\">[promessa]</span></div>"
+  },
+  {
+   "id": 2,
+   "frases": [
+    2
+   ],
+   "pose": "explica",
+   "quadro": 2.6,
+   "l1": "Passo 1:",
+   "l2": "[ideia]",
+   "card": "<div class=\"card mini in\" data-d=\"0.5\"><b>[título]</b>[detalhe]</div>"
+  },
+  {
+   "id": 3,
+   "frases": [
+    3
+   ],
+   "pose": "joinha",
+   "contador": false,
+   "quadro": 1.6,
+   "l1": "Segue pra",
+   "l2": "[mais]",
+   "card": "<div class=\"col\"><div class=\"botao in\" data-d=\"0.5\">Seguir</div></div>"
+  }
+ ]
+}

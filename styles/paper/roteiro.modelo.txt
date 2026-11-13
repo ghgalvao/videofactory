@@ -1,0 +1,10 @@
+[GANCHO: pergunta ou contradição que a pessoa quer responder]?
+[CONTEXTO: uma frase curta que situa o tema].
+[PASSO 1: primeira explicação, uma ideia só].
+[PASSO 2: segunda explicação].
+[PASSO 3: terceira explicação].
+[DADO: o número principal, escrito por extenso (ex.: trinta e cinco gramas)].
+[COMPARAÇÃO: contraste que dá peso ao dado].
+[RESSALVA: o que a pessoa precisa saber para não se enganar].
+
+Segue pra [PROMESSA DO PRÓXIMO VÍDEO].

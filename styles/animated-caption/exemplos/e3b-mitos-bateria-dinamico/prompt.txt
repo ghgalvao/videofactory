@@ -1,0 +1,2 @@
+Use o roteiro do exemplo e3-mitos-bateria e faça a versão com legenda dinâmica: palavras-chave maiores e coloridas, definidas em 1-entrada/destaques.json (mito, zero, noite, calor).
+Leia styles/animated-caption/STYLE.md, narre com Edge, gere o vídeo e me mostre lado a lado com a versão simples.

@@ -1,0 +1,3 @@
+Faça um vídeo no estilo pixel-avatar (personagem explicando passo a passo) sobre como fazer um bom resumo em 4 passos, para estudantes, com 25 a 30 segundos, 9:16.
+Leia styles/pixel-avatar/STYLE.md. Um passo por frase: ler tudo antes de anotar, marcar só a ideia principal, escrever com as próprias palavras, transformar em perguntas. Cada passo com um cartão simples (janela de arquivo, comparação copiar × reescrever, botões com perguntas) e a pose que combina com a frase; gancho com "aponta" e chamada final com "joinha", sem contador.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

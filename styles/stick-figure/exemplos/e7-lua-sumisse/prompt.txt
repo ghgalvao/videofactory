@@ -1,0 +1,3 @@
+Faça um vídeo no estilo stick-figure (bonequinho narrador com cenários) sobre "E se a Lua sumisse?", para curiosos em geral, com 45 a 50 segundos, 9:16.
+Leia styles/stick-figure/STYLE.md. Roteiro: noites mais escuras, marés menores (cerca de um terço), animais que se guiam pela Lua, a inclinação da Terra e as estações, e a Lua se afastando 3,8 cm por ano. Um cenário por ideia (céu, mar, corais, Terra inclinada) com o bonequinho reagindo.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

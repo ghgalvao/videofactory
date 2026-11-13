@@ -1,0 +1,414 @@
+{
+ "cena": "documental",
+ "dy": 0,
+ "tema": {
+  "verde": "#1f6f8b",
+  "ok": "#10b981"
+ },
+ "legenda": {
+  "texto": "#1b1f2a",
+  "destaque": "#1f6f8b"
+ },
+ "substituicoes": [
+  {
+   "de": "vinte e três de outubro de mil novecentos e seis",
+   "para": "23 de outubro de 1906"
+  },
+  {
+   "de": "mil oitocentos e setenta e três",
+   "para": "1873"
+  },
+  {
+   "de": "mil novecentos e trinta e dois",
+   "para": "1932"
+  },
+  {
+   "de": "mil novecentos e seis",
+   "para": "1906"
+  },
+  {
+   "de": "mil novecentos e um",
+   "para": "1901"
+  },
+  {
+   "de": "sessenta metros",
+   "para": "60 m"
+  },
+  {
+   "de": "duzentos metros",
+   "para": "200 m"
+  }
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 2.0,
+   "elementos": [
+    {
+     "tipo": "titulo",
+     "texto": "Paris, 1906",
+     "x": 960,
+     "y": 450,
+     "s": 230,
+     "frase": 1,
+     "atraso": 0.3,
+     "dur": 1.8
+    },
+    {
+     "tipo": "mini",
+     "texto": "UM BRASILEIRO FEZ O MUNDO OLHAR PRO CÉU",
+     "x": 960,
+     "y": 640,
+     "entrada": "abre",
+     "frase": 1,
+     "atraso": 2.2
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    2
+   ],
+   "quadro": 2.0,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "fazenda",
+     "x": 960,
+     "y": 450,
+     "w": 1200,
+     "h": 675,
+     "mov": "zoom_in",
+     "entrada": "fade",
+     "frase": 2,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "1873 · MINAS GERAIS",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 2,
+     "atraso": 1.0
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    3
+   ],
+   "quadro": 2.0,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "paris2",
+     "x": 960,
+     "y": 450,
+     "w": 1200,
+     "h": 675,
+     "mov": "pan_esq",
+     "entrada": "fade",
+     "frase": 3,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "PARIS · CENTRO DA AVIAÇÃO",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 3,
+     "atraso": 0.8
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    4
+   ],
+   "quadro": 3.0,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "paris",
+     "x": 960,
+     "y": 450,
+     "w": 1200,
+     "h": 675,
+     "mov": "pan_dir",
+     "entrada": "fade",
+     "frase": 4,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "1901 · PRÊMIO DEUTSCH",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 4,
+     "atraso": 2.0
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "frases": [
+    5
+   ],
+   "quadro": 2.0,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "hangar",
+     "x": 960,
+     "y": 450,
+     "w": 1200,
+     "h": 675,
+     "mov": "zoom_in",
+     "entrada": "fade",
+     "frase": 5,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "MAIS PESADO QUE O AR",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 5,
+     "atraso": 1.2
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "frases": [
+    6
+   ],
+   "quadro": 3.0,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "voo",
+     "x": 960,
+     "y": 450,
+     "w": 1200,
+     "h": 675,
+     "mov": "zoom_out",
+     "entrada": "fade",
+     "frase": 6,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "23 OUT 1906 · ≈ 60 m",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 6,
+     "atraso": 1.5
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "frases": [
+    7
+   ],
+   "quadro": 3.0,
+   "elementos": [
+    {
+     "tipo": "linha_tempo",
+     "x": 960,
+     "y": 440,
+     "entrada": "fade",
+     "frase": 7,
+     "atraso": 0.1,
+     "marcos": [
+      {
+       "data": "23 OUT 1906",
+       "texto": "≈ 60 m",
+       "frase": 7,
+       "atraso": 0.2
+      },
+      {
+       "data": "12 NOV 1906",
+       "texto": "≈ 220 m",
+       "frase": 7,
+       "atraso": 1.6
+      }
+     ]
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "REGISTROS OFICIAIS",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 7,
+     "atraso": 1.8
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "frases": [
+    8
+   ],
+   "quadro": 2.0,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "demoiselle",
+     "x": 960,
+     "y": 450,
+     "w": 1200,
+     "h": 675,
+     "mov": "pan_dir",
+     "entrada": "fade",
+     "frase": 8,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "PLANOS LIBERADOS",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 8,
+     "atraso": 1.5
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "frases": [
+    9
+   ],
+   "quadro": 2.0,
+   "elementos": [
+    {
+     "tipo": "titulo",
+     "texto": "1873 — 1932",
+     "x": 960,
+     "y": 450,
+     "s": 210,
+     "frase": 9,
+     "atraso": 0.3,
+     "dur": 1.6
+    },
+    {
+     "tipo": "mini",
+     "texto": "ALBERTO SANTOS DUMONT",
+     "x": 960,
+     "y": 640,
+     "entrada": "abre",
+     "frase": 9,
+     "atraso": 1.6
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "frases": [
+    10,
+    11
+   ],
+   "quadro": 3.5,
+   "elementos": [
+    {
+     "tipo": "foto",
+     "desenho": "voo",
+     "x": 500,
+     "y": 420,
+     "w": 840,
+     "h": 473,
+     "mov": "pan_dir",
+     "entrada": "fade",
+     "frase": 10,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "foto",
+     "desenho": "biplano",
+     "x": 1420,
+     "y": 420,
+     "w": 840,
+     "h": 473,
+     "mov": "pan_esq",
+     "entrada": "fade",
+     "frase": 10,
+     "atraso": 0.5
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "14-BIS · PARIS · 1906",
+     "x": 500,
+     "y": 730,
+     "entrada": "baixo",
+     "frase": 10,
+     "atraso": 1.0
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "WRIGHT FLYER · 1903",
+     "x": 1420,
+     "y": 730,
+     "entrada": "baixo",
+     "frase": 10,
+     "atraso": 1.4
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "VOO PÚBLICO, COM TESTEMUNHAS",
+     "x": 960,
+     "y": 860,
+     "entrada": "baixo",
+     "frase": 11,
+     "atraso": 0.6
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "frases": [
+    12
+   ],
+   "quadro": 1.5,
+   "elementos": [
+    {
+     "tipo": "creditos",
+     "x": 960,
+     "y": 450,
+     "linhas": [
+      "SANTOS DUMONT E O VOO DE PARIS",
+      "",
+      "Ilustrações vetoriais criadas para este vídeo",
+      "Voz sintética · Edge TTS",
+      "Roteiro com base em registros históricos",
+      "Fotos de domínio público podem substituir as ilustrações"
+     ],
+     "frase": 12,
+     "atraso": 0.0
+    },
+    {
+     "tipo": "mini",
+     "texto": "INSCREVA-SE PRA MAIS HISTÓRIAS",
+     "x": 960,
+     "y": 860,
+     "entrada": "abre",
+     "frase": 12,
+     "atraso": 0.3
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,3 @@
+Faça um vídeo no estilo documentary, 16:9, sobre Santos Dumont e o voo de Paris, para quem gosta de história, com 70 a 90 segundos.
+Leia styles/documentary/STYLE.md. Confira datas e lugares em duas fontes (1873, Paris 1901, prêmio Deutsch, 23 de outubro e 12 de novembro de 1906, Demoiselle). Ilustrações vetoriais criadas para o vídeo, sem retrato gerado de pessoa real, linha do tempo e créditos no fim. Use uma voz mais calma.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

@@ -1,0 +1,309 @@
+{
+ "cena": "fintech",
+ "dy": 0,
+ "tema": {
+  "verde": "#ffd45c",
+  "ok": "#10b981"
+ },
+ "legenda": {
+  "texto": "#ffffff",
+  "destaque": "#ffd45c"
+ },
+ "substituicoes": [
+  {
+   "de": "quase quatro centímetros",
+   "para": "≈ 3,8 cm"
+  }
+ ],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "ceu_lua",
+     "some_frase": 1,
+     "some_atraso": 1.5
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "E SE A LUA SUMISSE?",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 1,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "boneco",
+     "pose": "aponta",
+     "expr": "curioso",
+     "x": 540,
+     "y": 1200,
+     "w": 380,
+     "entrada": "baixo",
+     "frase": 1,
+     "atraso": 0.2
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    2,
+    3
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "ceu"
+    },
+    {
+     "tipo": "mini",
+     "texto": "NOITES MUITO MAIS ESCURAS",
+     "x": 540,
+     "y": 330,
+     "entrada": "abre",
+     "frase": 2
+    },
+    {
+     "tipo": "boneco",
+     "pose": "lanterna",
+     "expr": "assustado",
+     "x": 540,
+     "y": 1200,
+     "w": 380,
+     "entrada": "baixo",
+     "frase": 2,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "SÓ AS ESTRELAS",
+     "x": 540,
+     "y": 440,
+     "entrada": "baixo",
+     "frase": 3
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    4,
+    5
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "mar",
+     "reduz_frase": 5,
+     "reduz_atraso": 0.8
+    },
+    {
+     "tipo": "mini",
+     "texto": "AS MARÉS",
+     "x": 540,
+     "y": 330,
+     "entrada": "abre",
+     "frase": 4
+    },
+    {
+     "tipo": "boneco",
+     "pose": "mede",
+     "expr": "pensativo",
+     "x": 540,
+     "y": 1200,
+     "w": 380,
+     "entrada": "baixo",
+     "frase": 4,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "MENOS DA METADE",
+     "x": 540,
+     "y": 440,
+     "entrada": "baixo",
+     "frase": 5,
+     "atraso": 0.8
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    6
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "recife"
+    },
+    {
+     "tipo": "mini",
+     "texto": "ANIMAIS QUE SE GUIAM PELA LUA",
+     "x": 540,
+     "y": 330,
+     "entrada": "abre",
+     "frase": 6
+    },
+    {
+     "tipo": "boneco",
+     "pose": "triste",
+     "expr": "triste",
+     "x": 540,
+     "y": 1200,
+     "w": 380,
+     "entrada": "baixo",
+     "frase": 6,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "CORAIS E A LUA CHEIA",
+     "x": 540,
+     "y": 440,
+     "entrada": "baixo",
+     "frase": 6,
+     "atraso": 1.2
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "frases": [
+    7,
+    8
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "terra",
+     "oscila_frase": 8,
+     "oscila_atraso": 0.3
+    },
+    {
+     "tipo": "mini",
+     "texto": "A INCLINAÇÃO DA TERRA",
+     "x": 540,
+     "y": 330,
+     "entrada": "abre",
+     "frase": 7
+    },
+    {
+     "tipo": "boneco",
+     "pose": "bracos",
+     "expr": "serio",
+     "x": 540,
+     "y": 1280,
+     "w": 340,
+     "entrada": "baixo",
+     "frase": 7,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "ESTAÇÕES BAGUNÇADAS",
+     "x": 540,
+     "y": 440,
+     "entrada": "baixo",
+     "frase": 8,
+     "atraso": 1.0
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "frases": [
+    9,
+    10
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "terra_lua"
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "A LUA NÃO VAI SUMIR",
+     "x": 540,
+     "y": 330,
+     "entrada": "baixo",
+     "frase": 9
+    },
+    {
+     "tipo": "boneco",
+     "pose": "polegar",
+     "expr": "feliz",
+     "x": 540,
+     "y": 1280,
+     "w": 340,
+     "entrada": "baixo",
+     "frase": 9,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "rotulo",
+     "texto": "≈ 3,8 CM POR ANO",
+     "x": 540,
+     "y": 440,
+     "entrada": "bate",
+     "frase": 10,
+     "atraso": 0.8
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "frases": [
+    11
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "cenario",
+     "cena": "ceu_lua"
+    },
+    {
+     "tipo": "frase",
+     "texto": "SEGUE",
+     "g": true,
+     "x": 540,
+     "y": 900,
+     "entrada": "bate",
+     "frase": 11
+    },
+    {
+     "tipo": "mini",
+     "texto": "MAIS PERGUNTAS DO TIPO \"E SE\"",
+     "x": 540,
+     "y": 1010,
+     "entrada": "abre",
+     "frase": 11,
+     "atraso": 0.4
+    },
+    {
+     "tipo": "boneco",
+     "pose": "acena",
+     "expr": "feliz",
+     "x": 540,
+     "y": 1330,
+     "w": 340,
+     "entrada": "baixo",
+     "frase": 11,
+     "atraso": 0.2
+    }
+   ]
+  }
+ ]
+}

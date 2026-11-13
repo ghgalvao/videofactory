@@ -1,0 +1,3 @@
+Faça um vídeo no estilo data-infographic sobre onde vivem os brasileiros, por região, para curiosos em geral, com 38 a 42 segundos, 9:16.
+Leia styles/data-infographic/STYLE.md. Use os dados do Censo 2022 do IBGE e confira cada número em duas fontes. Gancho "4 em cada 10", total do país, barras por região e a comparação Sudeste contra Sul + Norte + Centro-Oeste. Cite a fonte na tela.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

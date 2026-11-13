@@ -1,0 +1,3 @@
+Faça um vídeo no estilo whiteboard (quadro branco com traço à mão) sobre "Por que o céu é azul?", para curiosos em geral, com 38 a 42 segundos, 9:16.
+Leia styles/whiteboard/STYLE.md. Roteiro: luz branca é a mistura das cores, ondas curtas e longas, moléculas do ar espalhando o azul, o pôr do sol laranja e o nome do fenômeno (espalhamento de Rayleigh). Um desenho simples por ideia: sol, prisma, ondas, setas espalhando, bonequinho olhando o céu.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

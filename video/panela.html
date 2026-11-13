@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/three-premium.min.js"></script>
+    <style>
+      @font-face { font-family: "Orbitron"; src: url("assets/fonts/Orbitron.ttf"); font-weight: 400 900; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Segoe UI Black", "Arial Black", sans-serif; }
+      #cena { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+      /* legenda: uma palavra, grande, no terço de baixo */
+      .clip { position: absolute; left: 60px; right: 60px; bottom: 560px; display: flex; align-items: center; justify-content: center; z-index: 20; }
+      .fala { font-size: 122px; line-height: 1; color: #fff; text-align: center; -webkit-text-stroke: 18px #111; paint-order: stroke fill;
+              text-shadow: 0 8px 0 #111; letter-spacing: 1px; }
+      .premium .fala { -webkit-text-stroke: 0; text-shadow: 0 6px 30px rgba(0,0,0,0.85); font-size: 108px; }
+      .fala span { display: inline-block; margin: 0 0.12em; }
+      /* HUD de dados */
+      #hud { position: absolute; top: 120px; left: 60px; right: 60px; display: flex; justify-content: space-between; z-index: 10; opacity: 0; }
+      .caixa { width: 430px; padding: 14px 24px 16px; border-radius: 26px; background: rgba(9, 44, 32, 0.88); border: 5px solid #39d98a; text-align: center;
+               box-shadow: 0 10px 0 rgba(0,0,0,0.35); }
+      .caixa b { display: block; font-size: 84px; line-height: 1; color: #39d98a; }
+      .caixa i { display: block; font-style: normal; font-family: "Segoe UI", Arial, sans-serif; font-weight: 700; font-size: 30px; color: #fff; letter-spacing: 3px; margin-top: 6px; }
+      .premium .caixa { background: rgba(12, 14, 20, 0.72); border: 2px solid rgba(255,255,255,0.18); box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-radius: 18px; }
+      .premium .caixa b { color: #ff6b35; font-family: "Orbitron"; font-weight: 800; font-size: 72px; }
+      /* selo preso a um ponto 3D */
+      #tag { position: absolute; padding: 16px 34px; border-radius: 50px; border: 7px solid #111; background: #ffd23f; color: #111; font-size: 50px;
+             white-space: nowrap; transform: translate(-50%, -50%); box-shadow: 0 9px 0 #111; z-index: 15; opacity: 0; }
+      .premium #tag { border: 2px solid rgba(255,255,255,0.25); background: rgba(12,14,20,0.8); color: #fff; box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+                      font-family: "Orbitron"; font-weight: 700; font-size: 40px; letter-spacing: 3px; padding-left: 64px; }
+      .premium #tag::before { content: ""; position: absolute; left: 28px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 50%;
+                              background: #ff6b35; box-shadow: 0 0 18px 5px rgba(255,107,53,0.85); }
+      #aviso { position: absolute; left: 50%; top: 420px; transform: translate(-50%, -50%) rotate(-4deg); padding: 14px 36px; border: 12px solid #e8352b;
+               color: #e8352b; background: rgba(255,255,255,0.92); font-size: 66px; line-height: 1.05; text-align: center; white-space: nowrap; z-index: 16; opacity: 0; }
+      .premium #aviso { background: rgba(12,14,20,0.85); font-family: "Orbitron"; font-weight: 800; font-size: 54px; border-width: 6px; color: #ff5a4a; border-color: #ff5a4a; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DURACAO__" data-width="1080" data-height="1920">
+      <audio id="narracao" src="narration.wav" data-start="0" data-duration="__DURACAO__" data-track-index="2"></audio>
+      <canvas id="cena" data-start="0" data-duration="__DURACAO__" data-track-index="0"></canvas>
+      <div id="hud" data-start="0" data-duration="__DURACAO__" data-track-index="3">
+        <div class="caixa"><b id="vTemp">100 °C</b><i>ÁGUA</i></div>
+        <div class="caixa"><b id="vPres">+0 bar</b><i>PRESSÃO EXTRA</i></div>
+      </div>
+      <div id="tag" data-start="0" data-duration="__DURACAO__" data-track-index="4"></div>
+      <div id="aviso" data-start="0" data-duration="__DURACAO__" data-track-index="5">NUNCA ABRA<br>COM PRESSÃO</div>
+__GRUPOS__
+    </div>
+    <script>
+      const DADOS = __DADOS__;
+      const SHOTS = DADOS.shots, FR = DADOS.frases;
+      const LOOK = DADOS.look === 'premium' ? 'premium' : 'brinquedo';
+      const PREMIUM = LOOK === 'premium';
+      if (PREMIUM) document.getElementById('root').classList.add('premium');
+      const T = THREE, PI = Math.PI, W = 1080, H = 1920;
+
+      // ================= renderer + pós =================
+      const renderer = new T.WebGLRenderer({ canvas: document.getElementById('cena'), antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+      renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = PREMIUM ? 1.0 : 1.08;
+      renderer.outputColorSpace = T.SRGBColorSpace;
+      renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
+      renderer.localClippingEnabled = true;
+      const scene = new T.Scene();
+      const pmrem = new T.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new T.RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = PREMIUM ? 0.35 : 0.45;
+      const fundoTex = (c0, c1, c2) => {
+        const c = document.createElement('canvas'); c.width = 270; c.height = 480; const g = c.getContext('2d');
+        const r = g.createRadialGradient(135, 260, 20, 135, 260, 380); r.addColorStop(0, c0); r.addColorStop(0.55, c1); r.addColorStop(1, c2);
+        g.fillStyle = r; g.fillRect(0, 0, 270, 480); const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; return t;
+      };
+      scene.background = PREMIUM ? fundoTex('#1a2230', '#0a0e15', '#030407') : new T.Color('#bfe3ff');
+      const camera = new T.PerspectiveCamera(42, W / H, 0.03, 60);
+      const composer = new T.EffectComposer(renderer, new T.WebGLRenderTarget(W, H, { samples: 4, type: T.HalfFloatType }));
+      composer.setPixelRatio(1); composer.setSize(W, H);
+      composer.addPass(new T.RenderPass(scene, camera));
+      const ao = new T.GTAOPass(scene, camera, W, H); ao.blendIntensity = PREMIUM ? 0.9 : 0.75; composer.addPass(ao);
+      composer.addPass(new T.UnrealBloomPass(new T.Vector2(W, H), PREMIUM ? 0.4 : 0.14, 0.5, PREMIUM ? 0.99 : 0.97));
+      composer.addPass(new T.OutputPass());
+
+      // ================= luzes =================
+      if (PREMIUM) {
+        const key = new T.SpotLight('#fff1e0', 60, 20, 0.6, 0.7, 1.6); key.position.set(2.2, 3.4, 3.0); key.castShadow = true;
+        key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0003; scene.add(key);
+        const rim = new T.SpotLight('#ff6b35', 90, 20, 0.7, 0.8, 1.6); rim.position.set(-2.6, 2.2, -2.4); scene.add(rim);
+        const fill = new T.DirectionalLight('#7fb6ff', 0.5); fill.position.set(-3, 1, 3); scene.add(fill);
+        scene.add(new T.HemisphereLight('#3a4660', '#0a0c10', 0.4));
+      } else {
+        scene.add(new T.HemisphereLight('#eaf6ff', '#c9a87c', 1.5));
+        const sol = new T.DirectionalLight('#fff3df', 2.6); sol.position.set(2.5, 4.5, 3.5); sol.castShadow = true;
+        sol.shadow.mapSize.set(2048, 2048); sol.shadow.bias = -0.0004; sol.shadow.normalBias = 0.02;
+        Object.assign(sol.shadow.camera, { left: -2.5, right: 2.5, top: 2.5, bottom: -2.5, near: 0.5, far: 12 }); scene.add(sol);
+      }
+
+      // ================= materiais por visual =================
+      const corte = new T.Plane(new T.Vector3(0, 0, -1), 10); // mantém z <= constante (corte da metade da frente)
+      const C = PREMIUM ? {
+        pele: '#cfc4b6', cabelo: '#2b2f38', camisa: '#ff6b35', calca: '#3a3f4a', sapato: '#1d2027',
+        piso: '#0d1118', parede: '#121722', armario: '#1a1f2a', bancada: '#2a303c', fogao: '#1c2129', fogaoTopo: '#07090c', grade: '#3a404a',
+        panela: '#c9ced6', tampa: '#d5dae1', alca: '#15181d', borracha: '#0c0d10', peso: '#2a2e36', seguranca: '#ff3b2f',
+        agua: '#3d9cff', feijao: '#5e2c12', feijaoCozido: '#2e1408', janela: '#24324a', relogio: '#e9e2d8', ponteiro: '#ff6b35'
+      } : {
+        pele: '#f2c08f', cabelo: '#4a2c17', camisa: '#2fa36b', calca: '#2d4f9c', sapato: '#f4f4f4',
+        piso: '#e8d3a8', parede: '#ffe39a', armario: '#ffffff', bancada: '#c98b52', fogao: '#f4f6f8', fogaoTopo: '#1e2228', grade: '#2a2e35',
+        panela: '#cfd5dc', tampa: '#dfe4ea', alca: '#1d1f24', borracha: '#202226', peso: '#3a3f47', seguranca: '#e8352b',
+        agua: '#7fd0ff', feijao: '#7a3a18', feijaoCozido: '#3d1a0a', janela: '#9fdcff', relogio: '#ffffff', ponteiro: '#e8352b'
+      };
+      const fosco = (cor, o) => PREMIUM
+        ? new T.MeshPhysicalMaterial(Object.assign({ color: cor, roughness: 0.55, metalness: 0, clearcoat: 0.3, clearcoatRoughness: 0.4 }, o || {}))
+        : new T.MeshStandardMaterial(Object.assign({ color: cor, roughness: 0.78, metalness: 0, flatShading: true }, o || {}));
+      const metal = (cor, o) => new T.MeshPhysicalMaterial(Object.assign({ color: cor, metalness: PREMIUM ? 1 : 0.75, roughness: PREMIUM ? 0.22 : 0.32,
+        clearcoat: PREMIUM ? 0.5 : 0 }, o || {}));
+      const cortado = (m) => { m.clippingPlanes = [corte]; m.clipShadows = true; m.side = T.DoubleSide; return m; };
+      const brilho = (r, g, b) => new T.MeshBasicMaterial({ color: new T.Color(r, g, b), toneMapped: false });
+
+      // ================= helpers de geometria =================
+      const RB = (w, h, d, r, seg) => new T.RoundedBoxGeometry(w, h, d, seg || 3, r || Math.min(w, h, d) * 0.18);
+      const malha = (geo, mat, x, y, z, pai) => { const m = new T.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); (pai || scene).add(m); return m; };
+      const torno = (pts, seg) => new T.LatheGeometry(pts.map((p) => new T.Vector2(p[0], p[1])), seg || 64);
+      const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+      const mtx = new T.Matrix4(), q = new T.Quaternion(), vS = new T.Vector3(), vP = new T.Vector3();
+      const poe = (inst, i, x, y, z, sx, sy, sz) => { vP.set(x, y, z); vS.set(sx + 1e-4, (sy === undefined ? sx : sy) + 1e-4, (sz === undefined ? sx : sz) + 1e-4); mtx.compose(vP, q, vS); inst.setMatrixAt(i, mtx); };
+
+      // ================= cozinha =================
+      const cozinha = new T.Group(); scene.add(cozinha);
+      const pisoTex = (() => {
+        const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+        const a = new T.Color(C.piso), b = a.clone().multiplyScalar(PREMIUM ? 1.25 : 0.9);
+        g.fillStyle = '#' + a.getHexString(); g.fillRect(0, 0, 256, 256); g.fillStyle = '#' + b.getHexString(); g.fillRect(0, 0, 128, 128); g.fillRect(128, 128, 128, 128);
+        const t = new T.CanvasTexture(c); t.wrapS = t.wrapT = T.RepeatWrapping; t.repeat.set(10, 10); t.colorSpace = T.SRGBColorSpace; return t;
+      })();
+      const piso = malha(new T.PlaneGeometry(10, 10), new T.MeshStandardMaterial({ map: pisoTex, roughness: PREMIUM ? 0.35 : 0.8, metalness: PREMIUM ? 0.4 : 0 }), 0, 0, 1, cozinha);
+      piso.rotation.x = -PI / 2;
+      const parede = malha(new T.PlaneGeometry(10, 5), fosco(C.parede, { flatShading: false }), 0, 2.5, -0.42, cozinha);
+      malha(RB(10, 0.12, 0.04, 0.01), fosco(C.armario), 0, 0.06, -0.4, cozinha); // rodapé
+      // armários baixos dos dois lados + bancada
+      [[-1.25, 1.5], [1.3, 1.6]].forEach(([x, w]) => {
+        malha(RB(w, 0.84, 0.6, 0.03), fosco(C.armario), x, 0.42, -0.1, cozinha);
+        malha(RB(w + 0.04, 0.06, 0.64, 0.02), fosco(C.bancada), x, 0.87, -0.1, cozinha);
+        for (let k = 0; k < Math.round(w / 0.5); k++) {
+          const px = x - w / 2 + 0.25 + k * 0.5; malha(RB(0.46, 0.7, 0.02, 0.01), fosco(C.armario), px, 0.44, 0.205, cozinha);
+          malha(RB(0.12, 0.025, 0.03, 0.01), metal(C.panela), px, 0.7, 0.225, cozinha);
+        }
+      });
+      // armários altos (esquerda) e janela (direita)
+      malha(RB(1.5, 0.62, 0.36, 0.03), fosco(C.armario), -1.25, 1.95, -0.24, cozinha);
+      const janelaMold = malha(RB(0.86, 0.76, 0.06, 0.02), fosco(C.armario), 1.3, 1.62, -0.39, cozinha);
+      malha(new T.PlaneGeometry(0.74, 0.64), PREMIUM ? fosco(C.janela) : brilho(0.75, 0.95, 1.15), 1.3, 1.62, -0.355, cozinha);
+      malha(RB(0.03, 0.66, 0.03, 0.008), fosco(C.armario), 1.3, 1.62, -0.35, cozinha); malha(RB(0.76, 0.03, 0.03, 0.008), fosco(C.armario), 1.3, 1.62, -0.35, cozinha);
+      // vasos e potes na bancada
+      malha(new T.CylinderGeometry(0.07, 0.055, 0.14, 10), fosco('#d9774a'), 1.75, 0.97, -0.15, cozinha);
+      [[0, 0.18], [0.06, 0.13], [-0.06, 0.13]].forEach(([dx, h], i) => { const f = malha(new T.ConeGeometry(0.05, h + 0.12, 6), fosco('#4caf50'), 1.75 + dx, 1.1 + h * 0.3, -0.15, cozinha); f.rotation.z = dx * 3; });
+      [['#f3c14b', -1.6], ['#e8eef3', -1.42], ['#e0603c', -1.25]].forEach(([cor, x]) => malha(RB(0.12, 0.18, 0.12, 0.03), fosco(cor), x, 0.99, -0.25, cozinha));
+      // relógio de parede
+      const relogio = new T.Group(); relogio.position.set(0.3, 1.9, -0.395); cozinha.add(relogio);
+      const aro = malha(new T.CylinderGeometry(0.16, 0.16, 0.04, 32), fosco(C.ponteiro), 0, 0, 0, relogio); aro.rotation.x = PI / 2;
+      const face = malha(new T.CylinderGeometry(0.14, 0.14, 0.045, 32), fosco(C.relogio), 0, 0, 0.003, relogio); face.rotation.x = PI / 2;
+      const ptrH = new T.Group(), ptrM = new T.Group(); ptrH.position.z = ptrM.position.z = 0.03; relogio.add(ptrH, ptrM);
+      malha(RB(0.018, 0.08, 0.01, 0.004), fosco('#111'), 0, 0.035, 0, ptrH); malha(RB(0.012, 0.115, 0.01, 0.004), fosco('#111'), 0, 0.05, 0.006, ptrM);
+
+      // ================= fogão =================
+      const fogao = new T.Group(); scene.add(fogao);
+      malha(RB(0.9, 0.84, 0.62, 0.03), fosco(C.fogao), 0, 0.42, -0.1, fogao);
+      malha(RB(0.92, 0.03, 0.64, 0.01), metal(C.fogaoTopo, { metalness: 0.2, roughness: 0.15 }), 0, 0.85, -0.1, fogao);
+      malha(RB(0.7, 0.36, 0.02, 0.02), metal('#20242b', { metalness: 0.1, roughness: 0.1 }), 0, 0.38, 0.215, fogao); // vidro do forno
+      malha(RB(0.6, 0.03, 0.04, 0.012), metal(C.panela), 0, 0.62, 0.235, fogao);
+      [-0.3, -0.1, 0.1, 0.3].forEach((x) => { const k = malha(new T.CylinderGeometry(0.032, 0.032, 0.035, 16), fosco('#2a2e35'), x, 0.73, 0.23, fogao); k.rotation.x = PI / 2; });
+      const queimadores = [[-0.2, 0.0], [0.2, -0.2]];
+      queimadores.forEach(([x, z]) => {
+        malha(new T.CylinderGeometry(0.06, 0.07, 0.025, 20), metal('#2a2e35'), x, 0.87, z, fogao);
+        [0, PI / 2].forEach((r) => { const g = malha(RB(0.28, 0.014, 0.018, 0.005), metal(C.grade, { roughness: 0.5 }), x, 0.892, z, fogao); g.rotation.y = r + PI / 4; });
+      });
+      // chamas (brilham)
+      const NCH = 16;
+      const chamas = queimadores.map(() => { const m = new T.InstancedMesh(new T.ConeGeometry(0.008, 0.028, 6), brilho(0.12, 0.35, 1.8), NCH); scene.add(m); return m; });
+
+      // ================= panela de pressão =================
+      const PX = -0.2, PZ = 0.0, PY = 0.9;  // base da panela
+      const RP = 0.155, HP = 0.2, NIV = 0.13;
+      const panela = new T.Group(); panela.position.set(PX, PY, PZ); scene.add(panela);
+      const matCorpo = cortado(metal(C.panela)), matTampa = cortado(metal(C.tampa)), matBorr = cortado(fosco(C.borracha, { flatShading: false }));
+      malha(torno([[0, 0], [RP - 0.01, 0], [RP, 0.012], [RP, HP], [RP + 0.006, HP + 0.004], [RP - 0.004, HP + 0.004]], 72), matCorpo, 0, 0, 0, panela);
+      const cabo = malha(RB(0.2, 0.028, 0.045, 0.012), cortado(fosco(C.alca, { flatShading: false })), -RP - 0.1, HP - 0.025, 0, panela);
+      const tampa = new T.Group(); tampa.position.y = HP + 0.004; panela.add(tampa);
+      malha(torno([[0, 0.034], [0.09, 0.03], [0.14, 0.016], [RP + 0.008, 0.002], [RP + 0.01, -0.02], [RP + 0.004, -0.02]], 72), matTampa, 0, 0, 0, tampa);
+      malha(RB(0.19, 0.026, 0.04, 0.012), cortado(fosco(C.alca, { flatShading: false })), -RP - 0.09, 0.01, 0, tampa);
+      const borracha = malha(new T.TorusGeometry(RP - 0.004, 0.006, 8, 64), matBorr, 0, -0.002, 0, tampa); borracha.rotation.x = PI / 2;
+      // válvula de peso (pino + peso) no centro
+      malha(new T.CylinderGeometry(0.007, 0.007, 0.03, 12), metal(C.peso), 0, 0.045, 0, tampa);
+      const peso = new T.Group(); peso.position.y = 0.068; tampa.add(peso);
+      malha(new T.CylinderGeometry(0.026, 0.03, 0.03, 24), metal(C.peso, { roughness: 0.4 }), 0, 0, 0, peso);
+      malha(new T.ConeGeometry(0.02, 0.025, 24), metal(C.peso, { roughness: 0.4 }), 0, 0.027, 0, peso);
+      malha(RB(0.056, 0.008, 0.012, 0.003), metal(C.peso), 0, 0.012, 0, peso);
+      // válvula de segurança (vermelha)
+      const segMat = fosco(C.seguranca, { flatShading: false, emissive: new T.Color('#ff2a1a'), emissiveIntensity: 0 });
+      const seg = malha(new T.CylinderGeometry(0.013, 0.015, 0.02, 20), segMat, 0.075, 0.035, -0.045, tampa);
+      const anelSeg = malha(new T.TorusGeometry(0.03, 0.004, 8, 40), brilho(3, 0.5, 0.3), 0.075, 0.04, -0.045, tampa); anelSeg.rotation.x = PI / 2;
+      // água (metade de trás + face do corte), feijões, bolhas, vapor
+      const aguaMat = new T.MeshPhysicalMaterial({ color: C.agua, transparent: true, opacity: PREMIUM ? 0.3 : 0.38, roughness: 0.1, metalness: 0, depthWrite: false, side: T.DoubleSide });
+      const agua = new T.Group(); panela.add(agua);
+      malha(new T.CylinderGeometry(RP - 0.006, RP - 0.006, NIV, 48, 1, false, PI / 2, PI), aguaMat, 0, NIV / 2 + 0.004, 0, agua);
+      malha(new T.PlaneGeometry(2 * (RP - 0.006), NIV), aguaMat, 0, NIV / 2 + 0.004, -0.001, agua);
+      const NF = 80, feijoes = new T.InstancedMesh(new T.SphereGeometry(0.011, 10, 8), fosco(C.feijao, { flatShading: false }), NF); panela.add(feijoes);
+      const posF = []; for (let i = 0; i < NF; i++) { const a = PI / 2 + hash(i) * PI, r = Math.sqrt(hash(i + 50)) * 0.13; posF.push([Math.sin(a) * r, 0.016 + hash(i + 99) * 0.05 + (i % 3) * 0.012, Math.cos(a) * r - 0.01, hash(i + 7) * PI]); }
+      const NB = 26, bolhas = new T.InstancedMesh(new T.SphereGeometry(0.0045, 10, 8), new T.MeshPhysicalMaterial({ color: '#eaf6ff', roughness: 0.05, transparent: true, opacity: 0.6 }), NB); panela.add(bolhas);
+      const NV = 36, vapor = new T.InstancedMesh(new T.SphereGeometry(0.0065, 10, 8), new T.MeshBasicMaterial({ color: new T.Color(PREMIUM ? 1.5 : 1.0, PREMIUM ? 1.5 : 1.0, PREMIUM ? 1.7 : 1.0), transparent: true, opacity: 0.55, depthWrite: false, toneMapped: !PREMIUM }), NV); panela.add(vapor);
+      const NJ = 36, jato = new T.InstancedMesh(new T.SphereGeometry(0.02, 12, 10), new T.MeshStandardMaterial({ color: '#ffffff', transparent: true, opacity: PREMIUM ? 0.55 : 0.8, roughness: 1, depthWrite: false }), NJ); scene.add(jato);
+
+      // ================= panela comum (plano 3) =================
+      const comum = new T.Group(); comum.position.set(0.2, 0.9, -0.2); scene.add(comum);
+      malha(torno([[0, 0], [0.13, 0], [0.14, 0.01], [0.14, 0.17], [0.148, 0.175], [0.136, 0.175]], 64), cortado(metal(C.panela)), 0, 0, 0, comum);
+      [-1, 1].forEach((s) => malha(RB(0.05, 0.018, 0.03, 0.008), fosco(C.alca, { flatShading: false }), s * 0.16, 0.15, 0, comum));
+      malha(new T.CylinderGeometry(0.132, 0.132, 0.12, 48, 1, false, PI / 2, PI), aguaMat, 0, 0.064, 0, comum);
+      malha(new T.PlaneGeometry(0.264, 0.12), aguaMat, 0, 0.064, -0.001, comum);
+      const bolhasC = new T.InstancedMesh(new T.SphereGeometry(0.007, 10, 8), bolhas.material, 40); comum.add(bolhasC);
+      const vaporC = new T.InstancedMesh(new T.SphereGeometry(0.02, 12, 10), jato.material, 30); comum.add(vaporC);
+      // termômetro espetado na água da panela comum
+      const termo = new T.Group(); termo.position.set(0.06, 0.06, -0.05); termo.rotation.z = -0.25; comum.add(termo);
+      malha(new T.CylinderGeometry(0.009, 0.009, 0.3, 16), new T.MeshPhysicalMaterial({ color: '#ffffff', transparent: true, opacity: 0.45, roughness: 0.05 }), 0, 0.15, 0, termo);
+      malha(new T.SphereGeometry(0.014, 16, 12), brilho(2.6, 0.25, 0.2), 0, 0, 0, termo);
+      const coluna = malha(new T.CylinderGeometry(0.005, 0.005, 1, 10), brilho(1.3, 0.12, 0.1), 0, 0, 0, termo);
+
+      // ================= personagem (boneco de brinquedo) =================
+      const P = new T.Group(); scene.add(P);
+      const pM = (c) => fosco(c), pele = pM(C.pele);
+      const parte = (geo, mat, x, y, z, pai) => malha(geo, mat, x, y, z, pai || P);
+      [-0.065, 0.065].forEach((x) => { parte(RB(0.1, 0.36, 0.11, 0.025, 2), pM(C.calca), x, 0.2, 0); parte(RB(0.11, 0.06, 0.16, 0.02, 2), pM(C.sapato), x, 0.03, 0.025); });
+      parte(RB(0.26, 0.1, 0.15, 0.03, 2), pM(C.calca), 0, 0.4, 0);
+      const tronco = parte(RB(0.28, 0.3, 0.16, 0.04, 2), pM(C.camisa), 0, 0.6, 0);
+      parte(RB(0.08, 0.05, 0.08, 0.015, 2), pele, 0, 0.77, 0);
+      const cabeca = new T.Group(); cabeca.position.set(0, 0.79, 0); P.add(cabeca);
+      parte(RB(0.22, 0.22, 0.2, 0.06, 3), pele, 0, 0.11, 0, cabeca);
+      parte(RB(0.235, 0.08, 0.215, 0.03, 2), pM(C.cabelo), 0, 0.2, -0.008, cabeca);
+      parte(RB(0.235, 0.14, 0.05, 0.02, 2), pM(C.cabelo), 0, 0.14, -0.085, cabeca);
+      const olhos = [-0.045, 0.045].map((x) => { const o = parte(new T.SphereGeometry(0.017, 12, 10), fosco('#15171c', { flatShading: false }), x, 0.12, 0.1, cabeca); o.scale.set(1, 1.3, 0.5); return o; });
+      [-0.045, 0.045].forEach((x) => parte(RB(0.045, 0.012, 0.012, 0.004, 1), pM(C.cabelo), x, 0.162, 0.1, cabeca));
+      const boca = parte(new T.TorusGeometry(0.03, 0.006, 6, 16, PI), fosco('#6b2a22', { flatShading: false }), 0, 0.07, 0.1, cabeca); boca.rotation.z = PI;
+      const ombro = (x) => {
+        const g = new T.Group(); g.position.set(x, 0.72, 0); P.add(g);
+        parte(RB(0.075, 0.18, 0.08, 0.025, 2), pM(C.camisa), 0, -0.08, 0, g);
+        const ante = new T.Group(); ante.position.y = -0.17; g.add(ante);
+        parte(RB(0.065, 0.16, 0.07, 0.025, 2), pele, 0, -0.07, 0, ante);
+        parte(RB(0.07, 0.07, 0.075, 0.025, 2), pele, 0, -0.17, 0, ante);
+        return { g, ante };
+      };
+      const bE = ombro(-0.185), bD = ombro(0.185);
+      P.scale.setScalar(1.7);
+
+      scene.traverse((o) => { if (o.isMesh && o !== piso && o !== parede && !(o.material && o.material.toneMapped === false)) { o.castShadow = true; o.receiveShadow = true; } });
+      piso.receiveShadow = true; parede.receiveShadow = true; aguaMat.depthWrite = false;
+      [agua, vapor, jato, bolhas, bolhasC, vaporC].forEach((o) => o.traverse((m) => { if (m.isMesh) m.castShadow = false; }));
+      if (PREMIUM) { [janelaMold].forEach((m) => (m.visible = false)); }
+
+      // ================= direção por plano =================
+      // cam: p = posição, l = alvo, f = fov. tag: texto + âncora 3D. pose do boneco.
+      const CENA = {
+        1: { cam: { p: [0.6, 1.4, 3.7], l: [0.22, 1.2, 0], f: 42 }, d: [0.3, 1.35, 3.2], tag: ['MENOS TEMPO?', [0.3, 2.12, -0.39]], pose: 'relogio', corte: 0 },
+        2: { cam: { p: [-0.2, 1.2, 0.72], l: [-0.2, 1.0, 0], f: 42 }, d: [-0.05, 1.28, 0.95], tag: ['ÁGUA MAIS QUENTE', [-0.2, 1.22, 0]], corte: 1, hud: 0 },
+        3: { cam: { p: [0.42, 1.24, 0.62], l: [0.2, 0.98, -0.2], f: 42 }, d: [0.33, 1.3, 0.75], tag: ['PANELA COMUM', [0.2, 1.21, -0.2]], corte: 1, cz: -0.2, comum: 1, hud: 1 },
+        4: { cam: { p: [-0.12, 1.3, 0.5], l: [-0.2, 1.1, 0], f: 44 }, d: [-0.3, 1.34, 0.56], tag: ['VAPOR PRESO', [-0.2, 1.21, 0]], corte: 1, hud: 1 },
+        5: { cam: { p: [-0.2, 1.22, 0.85], l: [-0.2, 1.01, 0], f: 42 }, d: [-0.02, 1.28, 0.9], tag: ['QUASE 120 °C', [-0.2, 0.97, 0]], corte: 1, hud: 1 },
+        6: { cam: { p: [-0.2, 1.04, 0.52], l: [-0.2, 0.95, -0.05], f: 40 }, d: [-0.27, 1.03, 0.44], tag: ['COZINHA MAIS RÁPIDO', [-0.2, 1.06, -0.03]], corte: 1, hud: 1, cozinha: 1 },
+        7: { cam: { p: [-0.08, 1.3, 0.42], l: [-0.2, 1.17, 0], f: 46 }, d: [-0.3, 1.36, 0.46], tag: ['VÁLVULA', [-0.2, 1.31, 0]], corte: 0, hud: 1, valvula: 1 },
+        8: { cam: { p: [0.45, 1.4, 2.7], l: [0.2, 1.15, 0], f: 42 }, d: [0.3, 1.35, 2.4], tag: ['VÁLVULA DE SEGURANÇA', [-0.125, 1.2, -0.045]], corte: 0, pose: 'dedo', seguranca: 1 },
+        9: { cam: { p: [0.85, 1.35, 3.0], l: [0.5, 1.15, 0.2], f: 42 }, d: [0.7, 1.3, 2.6], tag: ['SEGUE PRO PRÓXIMO', [0.78, 1.95, 0.5]], corte: 0, pose: 'acena' },
+      };
+      const E = (x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * x * (x * (x * 6 - 15) + 10);
+      const fase = (t, a, b) => E((t - a) / (b - a));
+      const lerp = (a, b, u) => a + (b - a) * u;
+      const achaPlano = (t) => { let i = 0; for (let k = 0; k < SHOTS.length; k++) if (t >= SHOTS[k].t0) i = k; return i; };
+      const sId = (id) => SHOTS.find((s) => s.id === id) || { t0: 1e9, t1: 1e9 };
+      const tagEl = document.getElementById('tag'), hud = document.getElementById('hud'), aviso = document.getElementById('aviso');
+      const vTemp = document.getElementById('vTemp'), vPres = document.getElementById('vPres');
+      const v3 = new T.Vector3();
+
+      function pose(nome, t, u) {
+        bE.g.rotation.set(0, 0, -0.08); bD.g.rotation.set(0, 0, 0.08); bE.ante.rotation.set(0, 0, 0); bD.ante.rotation.set(0, 0, 0);
+        cabeca.rotation.set(0, 0, 0); boca.scale.set(1, 1, 1);
+        if (nome === 'relogio') { cabeca.rotation.set(-0.45 * u, -0.5 * u, 0); bE.g.rotation.set(0, 0, -0.35); bE.ante.rotation.set(-1.2, 0, 0); bD.g.rotation.set(0, 0, 0.35); bD.ante.rotation.set(-1.2, 0, 0); boca.scale.set(0.6, 0.6, 1); }
+        if (nome === 'dedo') { bD.g.rotation.set(-2.3 * u, 0, 0.25 + Math.sin(t * 11) * 0.18 * u); bD.ante.rotation.set(-0.5 * u, 0, 0); cabeca.rotation.set(0, -0.25, 0); boca.scale.set(1.2, 0.6, 1); }
+        if (nome === 'acena') { bD.g.rotation.set(0, 0, (2.5 + Math.sin(t * 9) * 0.3) * u); bD.ante.rotation.set(0, 0, 0.3 * Math.sin(t * 9) * u); boca.scale.set(1.5, 1.3, 1); }
+        // piscar a cada ~3 s
+        const pis = (t % 3.1) < 0.11 ? 0.15 : 1; olhos.forEach((o) => o.scale.set(1, 1.3 * pis, 0.5));
+      }
+
+      function draw(t) {
+        const idx = achaPlano(t), s = SHOTS[idx], c = CENA[s.id] || CENA[1], prevS = SHOTS[Math.max(0, idx - 1)], cp = CENA[prevS.id] || c;
+        const u = idx === 0 ? 1 : fase(t, s.t0, s.t0 + 0.75), dur = Math.max(s.t1 - s.t0, 0.1), deriva = DADOS.animado ? fase(t, s.t0, s.t1) : 0.35;
+        // câmera: transição do plano anterior + deriva até a posição d
+        const alvoP = c.cam.p.map((v, k) => lerp(v, c.d[k], deriva * 0.55));
+        const pos = cp.cam.p.map((v, k) => lerp(lerp(v, cp.d[k], 0.55), alvoP[k], u));
+        const look = cp.cam.l.map((v, k) => lerp(v, c.cam.l[k], u));
+        camera.position.set(pos[0], pos[1], pos[2]); camera.lookAt(look[0], look[1], look[2]);
+        camera.fov = lerp(cp.cam.f, c.cam.f, u); camera.updateProjectionMatrix();
+
+        // corte da panela (varredura quando liga)
+        const cortar = c.corte ? (cp.corte ? 1 : u) : (cp.corte ? 1 - u : 0);
+        corte.constant = lerp(0.6, lerp(cp.cz || 0, c.cz || 0, u), cortar) + (cortar === 0 ? 10 : 0);
+        agua.visible = feijoes.visible = bolhas.visible = vapor.visible = cortar > 0.02;
+
+        // tempo físico da história
+        const tPres = sId(4).t0, tAlta = sId(5).t0;
+        const pres = fase(t, tAlta, tAlta + 5.2);                              // +0 → +1 bar
+        const fT = FR[(sId(5).frases || [1, 1])[1] - 1] || sId(5).t0;
+        const temp = 100 + 20 * fase(t, fT - 0.2, fT + 2.6);            // 100 → 120 °C na frase 6
+        vTemp.textContent = Math.round(c.comum ? 100 : temp) + ' °C';
+        vPres.textContent = '+' + (c.comum ? '0,0' : pres.toFixed(1).replace('.', ',')) + ' bar';
+        hud.style.opacity = c.hud ? (cp.hud ? 1 : u) : 0;
+
+        // chamas
+        chamas.forEach((m, j) => {
+          const [x, z] = queimadores[j], on = j === 0 || c.comum ? 1 : 0, frente = cortar > 0.02;
+          for (let i = 0; i < NCH; i++) { const a = (i / NCH) * 2 * PI, f = 0.8 + 0.35 * Math.sin(t * 23 + i * 1.7 + j);
+            const ok = on * (frente && Math.sin(a) > 0 ? 0 : 1); poe(m, i, x + Math.cos(a) * 0.055, 0.892 + 0.012 * f, z + Math.sin(a) * 0.055, ok, f * ok, ok); }
+          m.instanceMatrix.needsUpdate = true;
+        });
+
+        // tampa trava no plano 4 (sobe, gira e encaixa)
+        const s4 = sId(4), lev = fase(t, s4.t0 + 0.1, s4.t0 + 0.6) - fase(t, s4.t0 + 0.7, s4.t0 + 1.3);
+        tampa.position.y = HP + 0.004 + lev * 0.09; tampa.rotation.y = -0.6 * fase(t, s4.t0 + 0.7, s4.t0 + 1.5);
+
+        // feijões: cozinham no plano 6
+        const s6 = sId(6), coz = fase(t, s6.t0 + 0.3, s6.t1 - 0.4);
+        feijoes.material.color.set(C.feijao).lerp(new T.Color(C.feijaoCozido), coz);
+        posF.forEach((p, i) => { q.setFromAxisAngle(vP.set(0, 1, 0), p[3]); poe(feijoes, i, p[0], p[1] + Math.sin(t * 3 + i) * 0.002 * (1 + pres), p[2], 1 + 0.3 * coz, 0.68 + 0.2 * coz, 0.68 + 0.2 * coz); });
+        q.identity(); feijoes.instanceMatrix.needsUpdate = true;
+
+        // bolhas subindo na água
+        for (let i = 0; i < NB; i++) { const v = (hash(i + 3) + t * (0.55 + hash(i) * 0.5)) % 1, a = PI / 2 + hash(i + 11) * PI, r = Math.sqrt(hash(i + 21)) * 0.13;
+          poe(bolhas, i, Math.sin(a) * r, 0.01 + v * (NIV - 0.01), Math.cos(a) * r - 0.005, 0.6 + v); }
+        bolhas.instanceMatrix.needsUpdate = true;
+        // vapor preso entre a água e a tampa: mais partículas e mais agitadas com a pressão
+        const nVap = Math.round(NV * (0.25 + 0.75 * Math.max(pres, fase(t, tPres + 1.2, tPres + 3))));
+        for (let i = 0; i < NV; i++) { const a = PI / 2 + hash(i + 31) * PI, r = Math.sqrt(hash(i + 41)) * 0.14, sp = 2 + 4 * pres;
+          const y = NIV + 0.012 + (0.5 + 0.5 * Math.sin(t * sp + i * 2.3)) * (HP - NIV + 0.01 + lev * 0.09);
+          poe(vapor, i, Math.sin(a) * r + Math.sin(t * sp * 1.3 + i) * 0.01, y, Math.cos(a) * r - 0.005, i < nVap ? 1 : 0); }
+        vapor.instanceMatrix.needsUpdate = true;
+
+        // panela comum (plano 3): aparece, ferve aberta, vapor escapa, termômetro em 100 °C
+        const s3 = sId(3), vc = fase(t, s3.t0 - 0.2, s3.t0 + 0.4) - fase(t, s3.t1 - 0.1, s3.t1 + 0.5);
+        comum.visible = vc > 0.01; comum.scale.setScalar(Math.max(vc, 0.001));
+        coluna.scale.y = 0.06 + 0.17 * fase(t, s3.t0 + 0.3, s3.t0 + 2.2); coluna.position.y = coluna.scale.y / 2;
+        for (let i = 0; i < 40; i++) { const v = (hash(i + 5) + t * (0.7 + hash(i) * 0.6)) % 1, a = PI / 2 + hash(i + 13) * PI, r = Math.sqrt(hash(i + 23)) * 0.12;
+          poe(bolhasC, i, Math.sin(a) * r, 0.01 + v * 0.115, Math.cos(a) * r - 0.005, 0.6 + v); }
+        bolhasC.instanceMatrix.needsUpdate = true;
+        for (let i = 0; i < 30; i++) { const v = (hash(i + 61) + t * 0.35) % 1, a = hash(i + 71) * 2 * PI, r = hash(i + 81) * 0.1;
+          poe(vaporC, i, Math.cos(a) * r + Math.sin(t + i) * 0.03 * v, 0.14 + v * 0.45, Math.sin(a) * r, (0.4 + v * 1.6) * Math.sin(v * PI)); }
+        vaporC.instanceMatrix.needsUpdate = true;
+
+        // válvula de peso: gira e solta jato (forte no 7, leve no 8–9)
+        const s7 = sId(7), jatoF = Math.max(fase(t, s7.t0 + 0.4, s7.t0 + 0.9), t > s7.t1 ? 0.45 : 0);
+        peso.rotation.y = jatoF > 0 ? t * 14 : 0; peso.position.y = 0.068 + (jatoF > 0 ? Math.abs(Math.sin(t * 20)) * 0.003 : 0);
+        for (let i = 0; i < NJ; i++) { const v = (hash(i + 91) + t * 0.9) % 1, ang = hash(i + 101) * 2 * PI;
+          poe(jato, i, PX + Math.cos(ang) * v * 0.05 + Math.sin(t * 2 + i) * 0.012 * v, PY + HP + 0.1 + v * 0.24, PZ + Math.sin(ang) * v * 0.05, (0.35 + v * 1.6) * Math.sin(v * PI) * jatoF); }
+        jato.instanceMatrix.needsUpdate = true;
+
+        // válvula de segurança pulsa no plano 8
+        const s8 = sId(8), segF = fase(t, s8.t0 + 0.6, s8.t0 + 1.0) * (t < s8.t1 ? 1 : 0), pulso = 0.5 + 0.5 * Math.sin(t * 7);
+        segMat.emissiveIntensity = 1.6 * segF * pulso; anelSeg.visible = segF > 0.01; anelSeg.scale.setScalar(1 + 0.6 * pulso * segF);
+
+        // relógio corre no gancho
+        ptrM.rotation.z = -t * 2.4; ptrH.rotation.z = -t * 0.2 - 1;
+
+        // personagem
+        const pu = fase(t, s.t0 + 0.2, s.t0 + 0.8);
+        P.position.set(0.6, 0, 0.48); P.rotation.y = -0.45; P.visible = !!c.pose || !!cp.pose && u < 1;
+        pose(c.pose || '', t, c.pose ? pu : 0);
+
+        // selo projetado
+        const [txt, an] = c.tag; tagEl.textContent = txt;
+        v3.set(an[0], an[1], an[2]).project(camera);
+        let px = (v3.x * 0.5 + 0.5) * W, py = (-v3.y * 0.5 + 0.5) * H;
+        const w2 = tagEl.offsetWidth / 2 + 40; px = Math.max(w2, Math.min(W - w2, px)); py = Math.max(380, Math.min(1180, py));
+        const pop = fase(t, s.t0 + 0.35, s.t0 + 0.6), sai = fase(t, s.t1 - 0.25, s.t1);
+        tagEl.style.left = px + 'px'; tagEl.style.top = py + 'px';
+        tagEl.style.transform = 'translate(-50%, -50%) scale(' + (0.6 + 0.4 * pop) + ')'; tagEl.style.opacity = pop * (1 - sai);
+        // aviso: frase 10
+        const fA = FR[(s8.frases || [1, 1])[1] - 1] || s8.t0;
+        const av = fase(t, fA + 0.6, fA + 0.85) * (t < s8.t1 ? 1 : 0);
+        aviso.style.opacity = av; aviso.style.transform = 'translate(-50%, -50%) rotate(-4deg) scale(' + (2.2 - 1.2 * av) + ')';
+        tagEl.style.visibility = av > 0.05 ? 'hidden' : 'visible';
+
+        composer.render();
+      }
+
+      const tl = gsap.timeline({ paused: true });
+__ANIMACOES__
+      const estado = { t: 0 };
+      draw(0.01);
+      tl.to(estado, { t: __DURACAO_NUM__, duration: __DURACAO_NUM__, ease: 'none', onUpdate: function () { draw(estado.t); } }, 0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

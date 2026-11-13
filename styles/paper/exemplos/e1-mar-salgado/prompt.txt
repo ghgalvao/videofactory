@@ -1,0 +1,3 @@
+Faça um vídeo no estilo paper (colagem de papel) sobre "Por que o mar é salgado e o rio não?", para curiosos em geral, com 38 a 42 segundos, 9:16.
+Leia styles/paper/STYLE.md e styles/paper/MONTAGEM.md. Roteiro: a pergunta como gancho, a chuva dissolvendo minerais das rochas, os rios levando o sal, o sol evaporando a água e o sal ficando, o número de 35 gramas por litro e o contraste com o rio. Um recorte de papel por ideia (copo, pedra, rio, sol), etiquetas curtas e o número grande em destaque.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

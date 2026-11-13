@@ -1,0 +1,3 @@
+Faça um vídeo no estilo fintech-motion para um app fictício de controle de gastos pelo WhatsApp, para quem não consegue manter planilha, com 25 a 30 segundos, 9:16.
+Leia styles/fintech-motion/STYLE.md. Roteiro: salário cai e some, planilha esquecida, o problema nunca foi anotar, o app anota por texto ou áudio. Use saldo grande, calendário, planilha com selo e um celular com a conversa. Deixe claro na tela que a marca é fictícia.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

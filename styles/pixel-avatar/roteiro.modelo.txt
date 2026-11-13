@@ -1,0 +1,4 @@
+[Gancho: pergunta ou promessa]?
+Primeiro, [passo 1].
+
+Segue pra [mais].

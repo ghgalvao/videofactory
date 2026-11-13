@@ -1,0 +1,3 @@
+Faça um vídeo no estilo animated-caption (legenda palavra por palavra) sobre três mitos da bateria do celular, para quem usa smartphone, com 28 a 32 segundos, 9:16.
+Leia styles/animated-caption/STYLE.md. Mitos: descarregar até zero antes de carregar, carregar a noite toda estraga, o carregador é o vilão (o vilão é o calor). Frases curtas, um mito por bloco, chamada final.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

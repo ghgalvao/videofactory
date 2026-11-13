@@ -1,0 +1,3 @@
+Faça um vídeo no estilo paper sobre o que vai ficar mais caro com o imposto seletivo, para quem consome refrigerante, bebida alcoólica e cigarro, com 45 a 50 segundos, 9:16.
+Leia styles/paper/STYLE.md. Confira no Diário Oficial a data, o número da medida e as alíquotas, com duas fontes para cada número. Use recortes de produtos, um recorte de diário oficial com a medida, um calendário com o mês de início e um gráfico de barras em papel com quanto cada um paga.
+Siga o CLAUDE.md: me mostre o roteiro e espere meu ok; narre com Edge; monte o storyboard pela receita, rode `vf checar`, gere a folha e espere meu ok antes de animar.

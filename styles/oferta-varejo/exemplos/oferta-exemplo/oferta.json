@@ -1,0 +1,36 @@
+{
+ "linha1": "SEXTOU",
+ "linha2": "NO AÇOUGUE",
+ "placa": "OFERTA RELÂMPAGO",
+ "chamada": "Sextou no açougue! Oferta relâmpago!",
+ "logo": "",
+ "produtos": [
+  {
+   "nome": "COSTELA SUÍNA",
+   "fala": "Costela suína",
+   "preco": "19,90",
+   "unidade": "kg",
+   "foto": ""
+  },
+  {
+   "nome": "PICANHA",
+   "fala": "Picanha",
+   "preco": "69,90",
+   "unidade": "kg",
+   "foto": ""
+  }
+ ],
+ "cta": "Chama no WhatsApp e garanta o seu!",
+ "whatsapp": "(00) 90000-0000",
+ "validade": "domingo",
+ "cores": {
+  "fundo0": "#5c0006",
+  "fundo1": "#b3000c",
+  "fundo2": "#ff4a1c",
+  "ouro1": "#ffd23f",
+  "ouro2": "#ff8a00",
+  "borda": "#3d0800"
+ },
+ "voz": "pt-BR-AntonioNeural",
+ "taxa": "+20%"
+}

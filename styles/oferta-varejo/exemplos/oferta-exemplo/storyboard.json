@@ -1,0 +1,229 @@
+{
+ "cena": "oferta",
+ "dy": 0,
+ "tema": {
+  "fundo0": "#5c0006",
+  "fundo1": "#b3000c",
+  "fundo2": "#ff4a1c",
+  "ouro1": "#ffd23f",
+  "ouro2": "#ff8a00",
+  "borda": "#3d0800"
+ },
+ "legenda": {
+  "texto": "#ffffff",
+  "destaque": "#ffd23f"
+ },
+ "substituicoes": [],
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "pilula",
+     "x": 540,
+     "y": 300,
+     "entrada": "cima",
+     "frase": 1,
+     "atraso": 0.0,
+     "texto": "SUA LOGO AQUI"
+    },
+    {
+     "tipo": "t3d",
+     "texto": "SEXTOU",
+     "s": 190,
+     "x": 540,
+     "y": 760,
+     "rot": -3,
+     "entrada": "blur",
+     "frase": 1,
+     "atraso": 0.1
+    },
+    {
+     "tipo": "t3d",
+     "texto": "NO AÇOUGUE",
+     "s": 130,
+     "x": 540,
+     "y": 970,
+     "rot": -3,
+     "branco": true,
+     "entrada": "blur",
+     "frase": 1,
+     "atraso": 0.45
+    },
+    {
+     "tipo": "placa",
+     "texto": "OFERTA RELÂMPAGO",
+     "x": 540,
+     "y": 1170,
+     "rot": -3,
+     "entrada": "baixo",
+     "frase": 1,
+     "atraso": 0.9
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "frases": [
+    2
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "t3d",
+     "texto": "SEXTOU NO AÇOUGUE",
+     "s": 92,
+     "x": 540,
+     "y": 300,
+     "rot": -2,
+     "entrada": "cima",
+     "frase": 2,
+     "atraso": 0.0
+    },
+    {
+     "tipo": "produto",
+     "x": 540,
+     "y": 1010,
+     "w": 860,
+     "entrada": "baixo",
+     "frase": 2,
+     "atraso": 0.05
+    },
+    {
+     "tipo": "etiq",
+     "texto": "COSTELA SUÍNA",
+     "x": 540,
+     "y": 600,
+     "rot": -2,
+     "entrada": "esq",
+     "frase": 2,
+     "atraso": 0.25
+    },
+    {
+     "tipo": "preco",
+     "valor": "19,90",
+     "unidade": "O KG",
+     "x": 660,
+     "y": 1360,
+     "entrada": "bate",
+     "frase": 2,
+     "atraso": 0.9
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "frases": [
+    3
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "t3d",
+     "texto": "SEXTOU NO AÇOUGUE",
+     "s": 92,
+     "x": 540,
+     "y": 300,
+     "rot": -2,
+     "entrada": "cima",
+     "frase": 3,
+     "atraso": 0.0
+    },
+    {
+     "tipo": "produto",
+     "x": 540,
+     "y": 1010,
+     "w": 860,
+     "entrada": "baixo",
+     "frase": 3,
+     "atraso": 0.05
+    },
+    {
+     "tipo": "etiq",
+     "texto": "PICANHA",
+     "x": 540,
+     "y": 600,
+     "rot": -2,
+     "entrada": "dir",
+     "frase": 3,
+     "atraso": 0.25
+    },
+    {
+     "tipo": "preco",
+     "valor": "69,90",
+     "unidade": "O KG",
+     "x": 660,
+     "y": 1360,
+     "entrada": "bate",
+     "frase": 3,
+     "atraso": 0.9
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "frases": [
+    4,
+    5
+   ],
+   "quadro": 99,
+   "elementos": [
+    {
+     "tipo": "pilula",
+     "x": 540,
+     "y": 330,
+     "entrada": "cima",
+     "frase": 1,
+     "atraso": 0.0,
+     "texto": "SUA LOGO AQUI"
+    },
+    {
+     "tipo": "t3d",
+     "texto": "SEXTOU",
+     "s": 150,
+     "x": 540,
+     "y": 680,
+     "rot": -3,
+     "entrada": "blur",
+     "frase": 4,
+     "atraso": 0.0
+    },
+    {
+     "tipo": "t3d",
+     "texto": "NO AÇOUGUE",
+     "s": 120,
+     "x": 540,
+     "y": 840,
+     "rot": -3,
+     "branco": true,
+     "entrada": "blur",
+     "frase": 4,
+     "atraso": 0.2
+    },
+    {
+     "tipo": "zap",
+     "texto": "(00) 90000-0000",
+     "x": 540,
+     "y": 1140,
+     "entrada": "baixo",
+     "frase": 4,
+     "atraso": 0.5,
+     "pulsa": true
+    },
+    {
+     "tipo": "aviso",
+     "texto": "OFERTA VÁLIDA ATÉ DOMINGO OU ENQUANTO DURAR O ESTOQUE",
+     "x": 540,
+     "y": 1290,
+     "entrada": "fade",
+     "frase": 5,
+     "atraso": 0.1
+    }
+   ]
+  }
+ ]
+}

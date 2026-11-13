@@ -1,0 +1,87 @@
+{
+ "cena": "panela",
+ "planos": [
+  {
+   "id": 1,
+   "frases": [
+    1
+   ],
+   "quadro": 2.48
+  },
+  {
+   "id": 2,
+   "frases": [
+    2,
+    3
+   ],
+   "quadro": 3.08
+  },
+  {
+   "id": 3,
+   "frases": [
+    4
+   ],
+   "quadro": 2.56
+  },
+  {
+   "id": 4,
+   "frases": [
+    5
+   ],
+   "quadro": 2.35
+  },
+  {
+   "id": 5,
+   "frases": [
+    6,
+    7
+   ],
+   "quadro": 4.33
+  },
+  {
+   "id": 6,
+   "frases": [
+    8
+   ],
+   "quadro": 2.12
+  },
+  {
+   "id": 7,
+   "frases": [
+    9
+   ],
+   "quadro": 2.18
+  },
+  {
+   "id": 8,
+   "frases": [
+    10,
+    11
+   ],
+   "quadro": 7.22
+  },
+  {
+   "id": 9,
+   "frases": [
+    12
+   ],
+   "quadro": 1.86
+  }
+ ],
+ "substituicoes": [
+  {
+   "de": "cem graus",
+   "para": "100 °C"
+  },
+  {
+   "de": "cento e vinte graus",
+   "para": "120 °C"
+  }
+ ],
+ "look": "premium",
+ "legenda": {
+  "max_palavras": 2,
+  "texto": "#ffffff",
+  "destaque": "#ff6b35"
+ }
+}
